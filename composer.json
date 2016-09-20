@@ -1,0 +1,24 @@
+{
+    "name": "jmoati/ffmpeg",
+    "description": "A ffmpeg wrapper",
+    "license": "GPL-3.0",
+    "require": {
+        "php": ">=7.0",
+        "symfony/process": "~3.0",
+        "symfony/filesystem": "~3.0",
+        "jmoati/ffmpeg-x64-bin": "~3.0",
+        "phpunit/phpunit": "~5.5"
+    },
+    "authors": [
+        {
+            "name": "Jacques Moati",
+            "email": "jacques@moati.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Jmoati\\FFMpeg\\": "src",
+            "Jmoati\\FFMpeg\\Test\\": "test/src"
+        }
+    }
+}
