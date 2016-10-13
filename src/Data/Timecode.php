@@ -2,6 +2,8 @@
 
 namespace Jmoati\FFMpeg\Data;
 
+use Symfony\Component\Validator\Constraints\Time;
+
 class Timecode
 {
     /**
@@ -115,6 +117,38 @@ class Timecode
         $this->hours = ($left - $this->minutes) / 60;
 
         return $this;
+    }
+
+    /**
+     * @param Timecode $timecode
+     *
+     * @return Timecode
+     */
+    public function add(Timecode $timecode) : Timecode
+    {
+        $this->fromSeconds($this->getSeconds() + $timecode->getSeconds());
+
+        return $this;
+    }
+
+    /**
+     * @param Timecode $timecode
+     *
+     * @return Timecode
+     */
+    public function subtract(Timecode $timecode) : Timecode
+    {
+        $this->fromSeconds($this->getSeconds() - $timecode->getSeconds());
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getSeconds() : float
+    {
+        return $this->hours * 3600 + $this->minutes * 60 + $this->seconds + $this->frames / 100;
     }
 
     /**
