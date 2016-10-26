@@ -2,8 +2,6 @@
 
 namespace Jmoati\FFMpeg\Data;
 
-use Symfony\Component\Validator\Constraints\Time;
-
 class Timecode
 {
     /**

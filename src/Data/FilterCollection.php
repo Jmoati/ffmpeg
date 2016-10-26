@@ -16,7 +16,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     protected $parent;
 
-
     /**
      * FilterCollection constructor.
      *

@@ -154,10 +154,12 @@ class Media
         $this->setCallbackProperty($callback, 'totalPasses', $passes);
 
         for ($i = 0, $l = $passes; $i < $l; ++$i) {
-            $this
-                ->setCallbackProperty($callback, 'currentPass', $i + 1)
-                ->setCallbackProperty($callback, 'currentFrame', 0)
-                ->setCallbackProperty($callback, 'totalFrames', $this->getFrameCount($output));
+            if (null !== $callback) {
+                $this
+                    ->setCallbackProperty($callback, 'currentPass', $i + 1)
+                    ->setCallbackProperty($callback, 'currentFrame', 0)
+                    ->setCallbackProperty($callback, 'totalFrames', $this->getFrameCount($output));
+            }
 
             $this->ffmpeg->run(
                 sprintf(

@@ -61,8 +61,10 @@ class CommandBuilder
             $result[] = sprintf('-i "%s"', $stream->get('media_filename'));
         }
 
-        foreach ($this->media->streams() as $index => $stream) {
-            $result[] = sprintf('-map %s:%s', $index, $stream->get('index'));
+        if (!(null !== $this->output && isset($this->output->getParams()['maps']))) {
+            foreach ($this->media->streams() as $index => $stream) {
+                $result[] = sprintf('-map %s:%s', $index, $stream->get('index'));
+            }
         }
 
         return implode(' ', $result);
@@ -138,7 +140,13 @@ class CommandBuilder
         }
 
         foreach ($params as $param => $value) {
-            $result[] = "-$param $value";
+            if ('maps' == $param) {
+                foreach ($value as $map) {
+                    $result[] = "-map $map";
+                }
+            } else {
+                $result[] = "-$param $value";
+            }
         }
 
         return implode(' ', $result);

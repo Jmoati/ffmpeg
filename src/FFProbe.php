@@ -118,7 +118,7 @@ class FFProbe implements FFInterface
      */
     public function run(string $command, $callback = null) : Process
     {
-        $process = new Process('nice ' . $this->bin.' '.$command, null, null, null, 0);
+        $process = new Process('nice '.$this->bin.' '.$command, null, null, null, 0);
         $process->run($callback);
 
         return $process;

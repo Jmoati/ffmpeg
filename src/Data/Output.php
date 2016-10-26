@@ -60,6 +60,11 @@ class Output
     protected $height;
 
     /**
+     * @var array
+     */
+    protected $maps = [];
+
+    /**
      * @var bool
      */
     protected $upscale = false;
@@ -346,6 +351,36 @@ class Output
     }
 
     /**
+     * @return Output
+     */
+    public function clearMaps() : Output
+    {
+        $this->maps = [];
+
+        return $this;
+    }
+
+    /**
+     * @param string $map
+     *
+     * @return Output
+     */
+    public function addMap(string $map) : Output
+    {
+        $this->maps[] = $map;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMaps() : array
+    {
+        return $this->maps;
+    }
+
+    /**
      * @param string[] $params
      * @param string   $key
      * @param string   $getter
@@ -356,7 +391,11 @@ class Output
     protected function setParam(array &$params, string $key, string $getter, string $suffix = '') : Output
     {
         if (null !== $this->$getter()) {
-            $params[$key] = $this->$getter().$suffix;
+            if (is_array($this->$getter())) {
+                $params[$key] = $this->$getter();
+            } else {
+                $params[$key] = $this->$getter().$suffix;
+            }
         }
 
         return $this;
@@ -376,7 +415,8 @@ class Output
             ->setParam($params, 'vcodec', 'getVideoCodec')
             ->setParam($params, 'b:v', 'getVideoKiloBitrate', 'K')
             ->setParam($params, 'ar', 'getAudioRate')
-            ->setParam($params, 'r', 'getFrameRate');
+            ->setParam($params, 'r', 'getFrameRate')
+            ->setParam($params, 'maps', 'getMaps');
 
         return $params;
     }
