@@ -1,39 +1,32 @@
 <?php
-
 namespace Jmoati\FFMpeg\Data;
-
 use Jmoati\FFMpeg\Filter\FilterInterface;
-
 class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     /**
-     * @var InterfaceFilter[]
+     * @var FilterInterface[]
      */
     protected $filters = [];
-
     /**
-     * @var DataCollectionAbstract
+     * @var ManipulableAbstract
      */
     protected $parent;
-
     /**
      * FilterCollection constructor.
      *
-     * @param DataCollectionAbstract $parent
+     * @param ManipulableAbstract $parent
      */
-    public function __construct(DataCollectionAbstract $parent)
+    public function __construct(ManipulableAbstract $parent)
     {
         $this->parent = $parent;
     }
-
     /**
-     * @return DataCollectionAbstract
+     * @return ManipulableAbstract
      */
-    public function parent() : DataCollectionAbstract
+    public function parent() : ManipulableAbstract
     {
         return $this->parent;
     }
-
     /**
      * @param FilterInterface $filter
      *
@@ -43,36 +36,28 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         $newFilter = clone $filter;
         $newFilter->setParent($this);
-
         $this->filters[] = $newFilter;
-
         return $this;
     }
-
     /**
      * @return FilterCollection
      */
     public function clear() : FilterCollection
     {
         $this->filters = [];
-
         return $this;
     }
-
     /**
      * @return string
      */
     public function __toString() : string
     {
         $result = [];
-
         foreach ($this->filters as $filter) {
             $result[] = (string) $filter;
         }
-
         return implode(' ', $result);
     }
-
     /**
      * @return int
      */
@@ -80,7 +65,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         return count($this->filters);
     }
-
     /**
      * @return Stream[]
      */
@@ -88,7 +72,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         return $this->filters;
     }
-
     /**
      * @return \ArrayIterator
      */
@@ -96,7 +79,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         return new \ArrayIterator($this->filters);
     }
-
     /**
      * @param int|string $offset
      *
@@ -106,7 +88,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         return isset($this->filters[$offset]);
     }
-
     /**
      * @param int|string $offset
      *
@@ -116,7 +97,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         return $this->filters[$offset];
     }
-
     /**
      * @param int|string $offset
      * @param string     $value
@@ -126,10 +106,8 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     public function offsetSet($offset, $value) : FilterCollection
     {
         $this->filters[$offset] = $value;
-
         return $this;
     }
-
     /**
      * @param int|string $offset
      *
@@ -138,7 +116,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     public function offsetUnset($offset) : FilterCollection
     {
         unset($this->filters[$offset]);
-
         return $this;
     }
 }
