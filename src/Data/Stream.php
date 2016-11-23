@@ -5,6 +5,30 @@ namespace Jmoati\FFMpeg\Data;
 class Stream extends DataCollectionAbstract
 {
     /**
+     * Stream constructor.
+     *
+     * @param \string[] $properties
+     */
+    public function __construct(array $properties)
+    {
+        if (isset($properties['tags']) && isset($properties['tags']['rotate'])) {
+            if (90 == $properties['tags']['rotate'] || -90 == $properties['tags']['rotate'] || 270 == $properties['tags']['rotate']) {
+                var_dump($properties['tags']['rotate']);
+                $width = $properties['width'];
+                $height = $properties['height'];
+
+                $properties['height'] = $width;
+                $properties['width'] = $height;
+                $properties['coded_height'] = $width;
+                $properties['coded_width'] = $height;
+            }
+        }
+
+        parent::__construct($properties);
+    }
+
+
+    /**
      * @return bool
      */
     public function isAudio() : bool

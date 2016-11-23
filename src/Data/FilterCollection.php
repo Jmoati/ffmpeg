@@ -1,6 +1,8 @@
 <?php
 namespace Jmoati\FFMpeg\Data;
+
 use Jmoati\FFMpeg\Filter\FilterInterface;
+
 class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     /**
