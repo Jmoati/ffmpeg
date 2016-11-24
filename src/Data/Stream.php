@@ -13,7 +13,6 @@ class Stream extends DataCollectionAbstract
     {
         if (isset($properties['tags']) && isset($properties['tags']['rotate'])) {
             if (90 == $properties['tags']['rotate'] || -90 == $properties['tags']['rotate'] || 270 == $properties['tags']['rotate']) {
-                var_dump($properties['tags']['rotate']);
                 $width = $properties['width'];
                 $height = $properties['height'];
 
