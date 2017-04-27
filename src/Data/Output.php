@@ -84,7 +84,7 @@ class Output
     /**
      * @return string|null
      */
-    public function getAudioCodec()
+    public function getAudioCodec() : ?string
     {
         return $this->audioCodec;
     }
@@ -94,7 +94,7 @@ class Output
      *
      * @return Output
      */
-    public function setAudioKiloBitrate($audioKiloBitrate) : Output
+    public function setAudioKiloBitrate(int $audioKiloBitrate) : Output
     {
         $this->audioKiloBitrate = $audioKiloBitrate;
 
@@ -104,7 +104,7 @@ class Output
     /**
      * @return int|null
      */
-    public function getAudioKiloBitrate()
+    public function getAudioKiloBitrate() : ?int
     {
         return $this->audioKiloBitrate;
     }
@@ -145,7 +145,7 @@ class Output
     /**
      * @param string $format
      *
-     * @return Output
+     * @return self
      */
     public function setFormat(string $format) : self
     {
@@ -157,7 +157,7 @@ class Output
     /**
      * @return string|null
      */
-    public function getFormat()
+    public function getFormat() : ?string
     {
         return $this->format;
     }
@@ -209,7 +209,7 @@ class Output
     /**
      * @return int|null
      */
-    public function getWidth()
+    public function getWidth() : ?int
     {
         return $this->width;
     }
@@ -217,7 +217,7 @@ class Output
     /**
      * @return int|null
      */
-    public function getHeight()
+    public function getHeight() : ?int
     {
         return $this->height;
     }
@@ -277,7 +277,7 @@ class Output
     /**
      * @return string|null
      */
-    public function getVideoCodec()
+    public function getVideoCodec() : ?string
     {
         return $this->videoCodec;
     }
@@ -297,7 +297,7 @@ class Output
     /**
      * @return string|null
      */
-    public function getAudioRate()
+    public function getAudioRate() : ?string
     {
         return $this->audioRate;
     }
@@ -317,7 +317,7 @@ class Output
     /**
      * @return int|null
      */
-    public function getFrameRate()
+    public function getFrameRate() : ?int
     {
         return $this->frameRate;
     }
@@ -337,7 +337,7 @@ class Output
     /**
      * @return int|null
      */
-    public function getVideoKiloBitrate()
+    public function getVideoKiloBitrate() : ?int
     {
         return $this->videoKiloBitrate;
     }

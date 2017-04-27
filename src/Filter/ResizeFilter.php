@@ -6,10 +6,10 @@ use Jmoati\FFMpeg\Data\Dimension;
 
 class ResizeFilter extends FilterAbstract implements FormatFilterInterface, FrameFilterInterface
 {
-    const MODE_FORCE = 0;
-    const MODE_INSET = 1;
-    const MODE_MAX_WIDTH = 2;
-    const MODE_MAX_HEIGHT = 4;
+    public const MODE_FORCE = 0;
+    public const MODE_INSET = 1;
+    public const MODE_MAX_WIDTH = 2;
+    public const MODE_MAX_HEIGHT = 4;
 
     /**
      * @var Dimension

@@ -41,8 +41,8 @@ class Frame extends ManipulableAbstract
             $command = sprintf(
                 '-y -i "%s" %s -vframes 1 -ss %s -f image2 "%s"',
                 $this->media->format()->getFilename(),
-                $this->timecode,
                 (string) $this->filters(),
+                $this->timecode,
                 $filename
             );
         }

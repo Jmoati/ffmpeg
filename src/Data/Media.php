@@ -4,6 +4,7 @@ namespace Jmoati\FFMpeg\Data;
 
 use Jmoati\FFMpeg\Builder\CommandBuilder;
 use Jmoati\FFMpeg\FFMpeg;
+use Jmoati\FFMpeg\Progress\ProgressInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class Media
@@ -120,13 +121,13 @@ class Media
     }
 
     /**
-     * @param callable|null $callback
+     * @param ProgressInterface|null $callback
      * @param string        $property
      * @param int           $value
      *
      * @return Media
      */
-    protected function setCallbackProperty($callback, string $property, int $value) : Media
+    protected function setCallbackProperty(ProgressInterface $callback = null, string $property, int $value) : Media
     {
         if (null !== $callback && property_exists($callback, $property)) {
             $callback->$property = $value;
@@ -138,11 +139,11 @@ class Media
     /**
      * @param string        $filename
      * @param Output        $output
-     * @param callable|null $callback
+     * @param ProgressInterface|null $callback
      *
      * @return Media
      */
-    public function save(string $filename, Output $output, callable $callback = null) : Media
+    public function save(string $filename, Output $output, ProgressInterface $callback = null) : Media
     {
         $commandBuilder = new CommandBuilder($this, $output);
         $tmpDir = sys_get_temp_dir().'/'.sha1(uniqid()).'/';

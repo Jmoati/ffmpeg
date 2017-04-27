@@ -22,7 +22,7 @@ abstract class ManipulableAbstract
     /**
      * @return FilterCollection
      */
-    public function filters()
+    public function filters() : FilterCollection
     {
         return $this->filters;
     }
@@ -30,9 +30,9 @@ abstract class ManipulableAbstract
     /**
      * @param Media $media
      *
-     * @return $this
+     * @return self
      */
-    public function setMedia(Media $media)
+    public function setMedia(Media $media) : self
     {
         $this->media = $media;
 
@@ -42,7 +42,7 @@ abstract class ManipulableAbstract
     /**
      * @return Media
      */
-    public function media()
+    public function media() : Media
     {
         return $this->media;
     }

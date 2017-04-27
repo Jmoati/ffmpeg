@@ -3,6 +3,7 @@
 namespace Jmoati\FFMpeg\Test;
 
 use Jmoati\FFMpeg\Builder\CommandBuilder;
+use Jmoati\FFMpeg\Data\Dimension;
 use Jmoati\FFMpeg\Data\Format;
 use Jmoati\FFMpeg\Data\Media;
 use Jmoati\FFMpeg\Data\Output;
@@ -10,7 +11,9 @@ use Jmoati\FFMpeg\Data\StreamCollection;
 use Jmoati\FFMpeg\Data\Timecode;
 use Jmoati\FFMpeg\FFMpeg;
 use Jmoati\FFMpeg\Filter\ClipFilter;
+use Jmoati\FFMpeg\Filter\ResizeFilter;
 use Jmoati\FFMpeg\Filter\RotationFilter;
+use Jmoati\FFMpeg\Test\Progress\Progress;
 use Symfony\Component\Filesystem\Filesystem;
 
 class FFMpegTest extends FFAbstract
@@ -32,6 +35,9 @@ class FFMpegTest extends FFAbstract
         $this->assertEquals(2, $streams->count());
         $this->assertTrue($streams->audios()->first()->isAudio());
         $this->assertTrue($streams->videos()->first()->isVideo());
+
+        $this->assertFalse($streams->audios()->first()->isData());
+        $this->assertFalse($streams->audios()->first()->isImage());
     }
 
     public function testCreateFile()
@@ -96,16 +102,21 @@ class FFMpegTest extends FFAbstract
     {
         $video = FFMpeg::openFile($this->filenameVideo);
 
+        $dimension = new Dimension(320, 240);
+
         $rotationFilter = new RotationFilter(RotationFilter::ROTATION_90);
+        $resizeFilter = new ResizeFilter($dimension);
 
         $video->format()->filters()->add(new ClipFilter(Timecode::createFromSeconds(10), Timecode::createFromSeconds(5)));
         $video->format()->filters()->add($rotationFilter);
+        $video->format()->filters()->add($resizeFilter);
 
         $output = Output::create()
             ->setVideoKiloBitrate(1200)
             ->setHeight($video->streams()->videos()->first()->get('height') * 2)
             ->setUpscale(1)
             ->setPasses(2);
+
         $commandBuilder = new CommandBuilder($video, $output);
 
         $inputs = $commandBuilder->computeInputs();
@@ -123,11 +134,38 @@ class FFMpegTest extends FFAbstract
         $check = FFMpeg::openFile($this->filenameDestination);
 
         $this->assertEquals(10, floor($check->format()->get('duration')));
-        $this->assertEquals(2, $video->format()->filters()->count());
+        $this->assertEquals(3, $video->format()->filters()->count());
 
         $video->format()->filters()->clear();
 
         $this->assertEquals(0, $video->format()->filters()->count());
+    }
+
+    public function testFrame()
+    {
+        $timecode = Timecode::createFromFrame(2, 24);
+
+        $video = FFMpeg::openFile($this->filenameVideo);
+        $frame = $video->frame($timecode);
+        $frame->save($this->filenameFrameDestination);
+
+        $this->assertTrue(file_exists($this->filenameFrameDestination));
+
+        (new Filesystem())->remove($this->filenameFrameDestination);
+
+        $frame->save($this->filenameFrameDestination, true);
+
+        $this->assertTrue(file_exists($this->filenameFrameDestination));
+    }
+
+    public function testProgress()
+    {
+        $progress = new Progress();
+        $video = FFMpeg::openFile($this->filenameVideo);
+        $video->format()->filters()->add(new ClipFilter(Timecode::createFromSeconds(1)));
+
+        $video->save($this->filenameDestination, Output::create(), $progress);
+        $this->assertTrue(file_exists($this->filenameDestination));
     }
 
     public function setUp()
@@ -138,5 +176,6 @@ class FFMpegTest extends FFAbstract
     public function tearDown()
     {
         (new Filesystem())->remove($this->filenameDestination);
+        (new Filesystem())->remove($this->filenameFrameDestination);
     }
 }

@@ -17,9 +17,9 @@ class FilterAbstract
      *
      * @throws \LogicException
      *
-     * @return $this
+     * @return self
      */
-    public function setParent(FilterCollection $parent)
+    public function setParent(FilterCollection $parent) : self
     {
         $this->checkFilterType($parent, 'Stream', 'StreamFilterInterface');
         $this->checkFilterType($parent, 'Format', 'FormatFilterInterface');

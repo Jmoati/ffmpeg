@@ -1,0 +1,86 @@
+<?php
+
+namespace Jmoati\FFMpeg\Test\Progress;
+
+use Jmoati\FFMpeg\Progress\ProgressInterface;
+
+class Progress implements ProgressInterface
+{
+    /**
+     * @var int
+     */
+    public $totalPasses;
+
+    /**
+     * @var int
+     */
+    public $currentPass;
+
+    /**
+     * @var int
+     */
+    public $fps;
+
+    /**
+     * @var int
+     */
+    public $currentFrame;
+
+    /**
+     * @var int
+     */
+    public $totalFrames;
+
+    /**
+     * @var string
+     */
+    public $buffer;
+
+    /**
+     * @var int
+     */
+    public $remaining = -1;
+
+    /**
+     * @var int
+     */
+    public $pourcent = 0;
+
+    public function callback($type, string $data)
+    {
+        if (preg_match('/frame=\s*([0-9]+)\s*fps=\s*([0-9]+)\s*/', $data, $matches)) {
+            $this->currentFrame = (integer) $matches[1];
+            $this->fps = (integer) $matches[2];
+        }
+
+        $this->buffer .= $data;
+    }
+
+    /**
+     * @return int
+     */
+    public function remaining() : int
+    {
+        if ($this->totalFrames > 0 && $this->currentFrame > 0 && $this->fps > 0) {
+            $remainingFrames = $this->totalFrames * ($this->totalPasses - $this->currentPass) + $this->totalFrames - $this->currentFrame;
+            $this->remaining = (integer) round($remainingFrames / $this->fps);
+        }
+
+        return $this->remaining;
+    }
+
+    /**
+     * @return int
+     */
+    public function pourcent() : int
+    {
+        if ($this->totalFrames > 0 && $this->currentFrame > 0) {
+            $totalFrames = $this->totalFrames * $this->totalPasses;
+            $currentFrame = $this->totalFrames * ($this->currentPass - 1) + $this->currentFrame;
+
+            $this->pourcent = (integer) round($currentFrame / $totalFrames * 100);
+        }
+
+        return $this->pourcent;
+    }
+}

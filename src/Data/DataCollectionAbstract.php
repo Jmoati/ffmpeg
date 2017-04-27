@@ -32,12 +32,12 @@ abstract class DataCollectionAbstract extends ManipulableAbstract implements \Co
     /**
      * @param string $property
      *
-     * @return string
+     * @return string|null
      */
-    public function get(string $property) : string
+    public function get(string $property) : ?string
     {
         if (!isset($this->properties[$property])) {
-            return;
+            return null;
         }
 
         return $this->properties[$property];
