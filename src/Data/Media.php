@@ -141,9 +141,9 @@ class Media
      * @param Output        $output
      * @param ProgressInterface|null $callback
      *
-     * @return Media
+     * @return bool
      */
-    public function save(string $filename, Output $output, ProgressInterface $callback = null) : Media
+    public function save(string $filename, Output $output, ProgressInterface $callback = null) : bool
     {
         $commandBuilder = new CommandBuilder($this, $output);
         $tmpDir = sys_get_temp_dir().'/'.sha1(uniqid()).'/';
@@ -162,7 +162,7 @@ class Media
                     ->setCallbackProperty($callback, 'totalFrames', $this->getFrameCount($output));
             }
 
-            $this->ffmpeg->run(
+            $process = $this->ffmpeg->run(
                 sprintf(
                     '%s %s %s %s "%s" -y',
                     $commandBuilder->computeInputs(),
@@ -175,10 +175,14 @@ class Media
                     $callback :
                     array($callback, 'callback')
             );
+
+            if (0 !== $process->getExitCode()) {
+                break;
+            }
         }
 
         $this->fs->remove($tmpDir);
 
-        return $this;
+        return 0 === $process->getExitCode();
     }
 }

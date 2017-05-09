@@ -14,6 +14,9 @@ abstract class ManipulableAbstract
      */
     protected $media;
 
+    /**
+     * ManipulableAbstract constructor.
+     */
     public function __construct()
     {
         $this->filters = new FilterCollection($this);

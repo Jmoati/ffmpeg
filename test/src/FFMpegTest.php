@@ -88,8 +88,9 @@ class FFMpegTest extends FFAbstract
         $filters = $commandBuilder->computeFormatFilters();
         $this->assertTrue(is_numeric(strpos($filters, sprintf('-t %s', Timecode::createFromSeconds(16)))));
 
-        $new->save($this->filenameDestination, $output);
+        $result = $new->save($this->filenameDestination, $output);
         $this->assertTrue(file_exists($this->filenameDestination));
+        $this->assertTrue($result);
 
         $check = FFMpeg::openFile($this->filenameDestination);
         $videoStream = $check->streams()->videos()->first();
@@ -128,8 +129,9 @@ class FFMpegTest extends FFAbstract
         $this->assertTrue(is_numeric(strpos($filters, sprintf('-t %s', Timecode::createFromSeconds(10)))));
         $this->assertTrue(is_numeric(strpos($filters, 'transpose=1')));
 
-        $video->save($this->filenameDestination, $output);
+        $result = $video->save($this->filenameDestination, $output);
         $this->assertTrue(file_exists($this->filenameDestination));
+        $this->assertTrue($result);
 
         $check = FFMpeg::openFile($this->filenameDestination);
 
@@ -147,13 +149,15 @@ class FFMpegTest extends FFAbstract
 
         $video = FFMpeg::openFile($this->filenameVideo);
         $frame = $video->frame($timecode);
-        $frame->save($this->filenameFrameDestination);
+        $result = $frame->save($this->filenameFrameDestination);
+        $this->assertTrue($result);
 
         $this->assertTrue(file_exists($this->filenameFrameDestination));
 
         (new Filesystem())->remove($this->filenameFrameDestination);
 
-        $frame->save($this->filenameFrameDestination, true);
+        $result = $frame->save($this->filenameFrameDestination, true);
+        $this->assertTrue($result);
 
         $this->assertTrue(file_exists($this->filenameFrameDestination));
     }
@@ -164,8 +168,9 @@ class FFMpegTest extends FFAbstract
         $video = FFMpeg::openFile($this->filenameVideo);
         $video->format()->filters()->add(new ClipFilter(Timecode::createFromSeconds(1)));
 
-        $video->save($this->filenameDestination, Output::create(), $progress);
+        $result = $video->save($this->filenameDestination, Output::create(), $progress);
         $this->assertTrue(file_exists($this->filenameDestination));
+        $this->assertTrue($result);
     }
 
     public function setUp()
