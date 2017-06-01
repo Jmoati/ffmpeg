@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Data;
 
 class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 {
-    /**
-     * @var Stream[]
-     */
+    /** @var Stream[] */
     protected $streams = [];
 
     /**
@@ -36,7 +36,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return StreamCollection
      */
-    public function add(Stream $stream) : StreamCollection
+    public function add(Stream $stream): StreamCollection
     {
         $newStream = clone $stream;
         $this->streams[] = $newStream;
@@ -49,7 +49,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return StreamCollection
      */
-    public function remove(Stream $stream) : StreamCollection
+    public function remove(Stream $stream): StreamCollection
     {
         for ($i = 0, $l = count($this->streams); $i < $l; ++$i) {
             if ($this->streams[$i] === $stream) {
@@ -64,7 +64,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @return StreamCollection
      */
-    public function videos() : StreamCollection
+    public function videos(): StreamCollection
     {
         return new static(array_filter(
             $this->streams,
@@ -77,7 +77,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @return StreamCollection
      */
-    public function audios() : StreamCollection
+    public function audios(): StreamCollection
     {
         return new static(array_filter(
             $this->streams,
@@ -90,7 +90,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @return StreamCollection
      */
-    public function data() : StreamCollection
+    public function data(): StreamCollection
     {
         return new static(array_filter(
             $this->streams,
@@ -103,7 +103,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @return int
      */
-    public function count() : int
+    public function count(): int
     {
         return count($this->streams);
     }
@@ -111,7 +111,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @return Stream[]
      */
-    public function all() : array
+    public function all(): array
     {
         return $this->streams;
     }
@@ -119,7 +119,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @return \ArrayIterator
      */
-    public function getIterator() : \ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->streams);
     }
@@ -129,7 +129,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return bool
      */
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
         return isset($this->streams[$offset]);
     }
@@ -139,7 +139,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return Stream
      */
-    public function offsetGet($offset) : Stream
+    public function offsetGet($offset): Stream
     {
         return $this->streams[$offset];
     }
@@ -150,7 +150,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return StreamCollection
      */
-    public function offsetSet($offset, $value) : StreamCollection
+    public function offsetSet($offset, $value): StreamCollection
     {
         $this->streams[$offset] = $value;
 
@@ -162,7 +162,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return StreamCollection
      */
-    public function offsetUnset($offset) : StreamCollection
+    public function offsetUnset($offset): StreamCollection
     {
         unset($this->streams[$offset]);
 
@@ -174,7 +174,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return StreamCollection
      */
-    public function setMedia(Media $media) : StreamCollection
+    public function setMedia(Media $media): StreamCollection
     {
         foreach ($this->streams as $stream) {
             $stream->setMedia($media);

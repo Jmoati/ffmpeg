@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Test;
 
 use Jmoati\FFMpeg\Builder\CommandBuilder;
@@ -114,8 +116,8 @@ class FFMpegTest extends FFAbstract
 
         $output = Output::create()
             ->setVideoKiloBitrate(1200)
-            ->setHeight($video->streams()->videos()->first()->get('height') * 2)
-            ->setUpscale(1)
+            ->setHeight((int)($video->streams()->videos()->first()->get('height') * 2))
+            ->setUpscale(true)
             ->setPasses(2);
 
         $commandBuilder = new CommandBuilder($video, $output);

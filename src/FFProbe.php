@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg;
 
 use Jmoati\FFMpeg\Data\Format;
@@ -13,9 +15,7 @@ class FFProbe implements FFInterface
     const COMMAND_FORMAT = '-show_format';
     const COMMAND_MEDIA = '-show_streams -show_format';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $bin;
 
     /**
@@ -38,7 +38,7 @@ class FFProbe implements FFInterface
     /**
      * @return FFProbe
      */
-    public static function create() : FFProbe
+    public static function create(): FFProbe
     {
         return new static();
     }
@@ -48,7 +48,7 @@ class FFProbe implements FFInterface
      *
      * @return Format
      */
-    public function format(string $filename) : Format
+    public function format(string $filename): Format
     {
         return $this->probe($filename, self::COMMAND_FORMAT);
     }
@@ -58,7 +58,7 @@ class FFProbe implements FFInterface
      *
      * @return StreamCollection
      */
-    public function streams(string $filename) : StreamCollection
+    public function streams(string $filename): StreamCollection
     {
         return $this->probe($filename, self::COMMAND_STREAMS);
     }
@@ -68,7 +68,7 @@ class FFProbe implements FFInterface
      *
      * @return Media
      */
-    public function media(string $filename) : Media
+    public function media(string $filename): Media
     {
         return $this->probe($filename, self::COMMAND_MEDIA);
     }
@@ -112,11 +112,11 @@ class FFProbe implements FFInterface
 
     /**
      * @param string        $command
-     * @param callable|null $callback
+     * @param mixed|null $callback
      *
      * @return Process
      */
-    public function run(string $command, $callback = null) : Process
+    public function run(string $command, $callback = null): Process
     {
         $process = new Process('nice '.$this->bin.' '.$command, null, null, null, 0);
         $process->run($callback);

@@ -1,17 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Data;
 
 class Dimension
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $width;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $height;
 
     /**
@@ -20,7 +18,7 @@ class Dimension
      *
      * @return Dimension
      */
-    public static function create(int $width, int $height) : Dimension
+    public static function create(int $width, int $height): Dimension
     {
         return new static($width, $height);
     }
@@ -30,11 +28,11 @@ class Dimension
      *
      * @return Dimension
      */
-    public static function createFromString(string $string) : Dimension
+    public static function createFromString(string $string): Dimension
     {
         preg_match('/([0-9]+)\s?[:xX,;]{1}\s?([0-9]+)/', $string, $matches);
 
-        return self::create($matches[1], $matches[2]);
+        return self::create((int)$matches[1], (int)$matches[2]);
     }
 
     /**
@@ -52,7 +50,7 @@ class Dimension
     /**
      * @return int
      */
-    public function getWidth() : int
+    public function getWidth(): int
     {
         return $this->width;
     }
@@ -60,7 +58,7 @@ class Dimension
     /**
      * @return int
      */
-    public function getHeight() : int
+    public function getHeight(): int
     {
         return $this->height;
     }
@@ -71,7 +69,7 @@ class Dimension
      *
      * @return Dimension
      */
-    public function setHeight(int $height, int $modulo = 2) : Dimension
+    public function setHeight(int $height, int $modulo = 2): Dimension
     {
         $this->height = intval(floor($height) - (floor($height) % $modulo));
 
@@ -84,9 +82,9 @@ class Dimension
      *
      * @return Dimension
      */
-    public function setWidth(int $width, int $modulo = 2) : Dimension
+    public function setWidth(int $width, int $modulo = 2): Dimension
     {
-        $this->width = intval(floor($width) - (floor($width) % $modulo));
+        $this->width = (int)(floor($width) - (floor($width) % $modulo));
 
         return $this;
     }
@@ -94,15 +92,15 @@ class Dimension
     /**
      * @return int
      */
-    public function getRatio() : int
+    public function getRatio(): int
     {
-        return $this->width / $this->height;
+        return (int)($this->width / $this->height);
     }
 
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return sprintf('%sx%s', $this->width, $this->height);
     }

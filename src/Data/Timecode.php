@@ -1,27 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Data;
 
 class Timecode
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $hours;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $minutes;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $seconds;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $frames;
 
     /**
@@ -43,7 +37,7 @@ class Timecode
     /**
      * @return Timecode
      */
-    public static function create() : Timecode
+    public static function create(): Timecode
     {
         return new static();
     }
@@ -54,7 +48,7 @@ class Timecode
      *
      * @return Timecode
      */
-    public static function createFromFrame(int $frames, float $fps) : Timecode
+    public static function createFromFrame(int $frames, float $fps): Timecode
     {
         return self::create()->fromFrame($frames, $fps);
     }
@@ -64,7 +58,7 @@ class Timecode
      *
      * @return Timecode
      */
-    public static function createFromSeconds(float $secondes) : Timecode
+    public static function createFromSeconds(float $secondes): Timecode
     {
         return self::create()->fromSeconds($secondes);
     }
@@ -74,7 +68,7 @@ class Timecode
      *
      * @return Timecode
      */
-    public static function createFromString(string $string) : Timecode
+    public static function createFromString(string $string): Timecode
     {
         return self::create()->fromString($string);
     }
@@ -82,7 +76,7 @@ class Timecode
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return sprintf('%02d:%02d:%02d.%02d', $this->hours, $this->minutes, $this->seconds, $this->frames);
     }
@@ -93,7 +87,7 @@ class Timecode
      *
      * @return Timecode
      */
-    public function fromFrame(int $frames, float $fps) : Timecode
+    public function fromFrame(int $frames, float $fps): Timecode
     {
         return $this->fromSeconds($frames / $fps);
     }
@@ -103,7 +97,7 @@ class Timecode
      *
      * @return Timecode
      */
-    public function fromSeconds(float $seconds) : Timecode
+    public function fromSeconds(float $seconds): Timecode
     {
         $left = floor($seconds);
         $this->frames = round(100 * ($seconds - $left));
@@ -122,7 +116,7 @@ class Timecode
      *
      * @return Timecode
      */
-    public function add(Timecode $timecode) : Timecode
+    public function add(Timecode $timecode): Timecode
     {
         $this->fromSeconds($this->getSeconds() + $timecode->getSeconds());
 
@@ -134,7 +128,7 @@ class Timecode
      *
      * @return Timecode
      */
-    public function subtract(Timecode $timecode) : Timecode
+    public function subtract(Timecode $timecode): Timecode
     {
         $this->fromSeconds($this->getSeconds() - $timecode->getSeconds());
 
@@ -144,7 +138,7 @@ class Timecode
     /**
      * @return float
      */
-    public function getSeconds() : float
+    public function getSeconds(): float
     {
         return $this->hours * 3600 + $this->minutes * 60 + $this->seconds + $this->frames / 100;
     }
@@ -154,7 +148,7 @@ class Timecode
      *
      * @return Timecode
      */
-    public function fromString(string $string) : Timecode
+    public function fromString(string $string): Timecode
     {
         preg_match('/^([0-9]+):([0-9]+):([0-9]+)[:,\.]{1}([0-9]+)$/', $string, $matches);
 

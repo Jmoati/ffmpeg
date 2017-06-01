@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Filter;
 
 class RotationFilter extends FilterAbstract implements FormatFilterInterface, FrameFilterInterface
@@ -8,9 +10,7 @@ class RotationFilter extends FilterAbstract implements FormatFilterInterface, Fr
     const ROTATION_180 = 'transpose=1, transpose=1';
     const ROTATION_270 = 'transpose=2';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $rotation;
 
     /**
@@ -26,7 +26,7 @@ class RotationFilter extends FilterAbstract implements FormatFilterInterface, Fr
     /**
      * @return string
      */
-    public function getRotation() : string
+    public function getRotation(): string
     {
         return $this->rotation;
     }
@@ -34,7 +34,7 @@ class RotationFilter extends FilterAbstract implements FormatFilterInterface, Fr
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return sprintf('-vf "%s"', $this->rotation);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg;
 
 use Jmoati\FFMpeg\Data\Media;
@@ -7,14 +9,10 @@ use Symfony\Component\Process\Process;
 
 class FFMpeg implements FFInterface
 {
-    /**
-     * @var FFProbe
-     */
+    /** @var FFProbe */
     protected $ffprobe;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $bin;
 
     /**
@@ -22,7 +20,7 @@ class FFMpeg implements FFInterface
      *
      * @return FFMpeg
      */
-    public static function create(FFProbe $ffprobe = null) : FFMpeg
+    public static function create(FFProbe $ffprobe = null): FFMpeg
     {
         if (null === $ffprobe) {
             $ffprobe = new FFProbe();
@@ -40,10 +38,10 @@ class FFMpeg implements FFInterface
     {
         $this->ffprobe = $ffprobe;
 
-        $proccess = new Process('which ffmpeg');
-        $proccess->run();
+        $process = new Process('which ffmpeg');
+        $process->run();
 
-        if (0 == $proccess->getExitCode()) {
+        if (0 == $process->getExitCode()) {
             $this->bin = 'ffmpeg';
         } elseif (file_exists(__DIR__.'/../vendor/bin/ffmpeg')) {
             $this->bin = realpath(__DIR__.'/../vendor/bin/ffmpeg');
@@ -55,11 +53,9 @@ class FFMpeg implements FFInterface
     /**
      * @return Media
      */
-    public static function createFile() : Media
+    public static function createFile(): Media
     {
-        $ffmpeg = self::create();
-
-        return new Media($ffmpeg);
+        return new Media(self::create());
     }
 
     /**
@@ -67,7 +63,7 @@ class FFMpeg implements FFInterface
      *
      * @return Media
      */
-    public static function openFile(string $filename) : Media
+    public static function openFile(string $filename): Media
     {
         return self::create()->ffprobe->media($filename);
     }
@@ -78,7 +74,7 @@ class FFMpeg implements FFInterface
      *
      * @return Process
      */
-    public function run(string $command, $callback = null) : Process
+    public function run(string $command, $callback = null): Process
     {
         $process = new Process('nice '.$this->bin.' '.$command, null, null, null, 0);
         $process->run($callback);

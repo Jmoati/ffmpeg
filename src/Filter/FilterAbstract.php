@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Filter;
 
 use Jmoati\FFMpeg\Data\FilterCollection;
@@ -7,9 +9,7 @@ use Jmoati\FFMpeg\Data\Media;
 
 class FilterAbstract
 {
-    /**
-     * @var FilterCollection
-     */
+    /** @var FilterCollection */
     protected $parent;
 
     /**
@@ -17,9 +17,9 @@ class FilterAbstract
      *
      * @throws \LogicException
      *
-     * @return self
+     * @return FilterAbstract
      */
-    public function setParent(FilterCollection $parent) : self
+    public function setParent(FilterCollection $parent): FilterAbstract
     {
         $this->checkFilterType($parent, 'Stream', 'StreamFilterInterface');
         $this->checkFilterType($parent, 'Format', 'FormatFilterInterface');
@@ -39,7 +39,7 @@ class FilterAbstract
      *
      * @throws \LogicException
      */
-    protected function checkFilterType(FilterCollection $parent, string $className, string $interface) : bool
+    protected function checkFilterType(FilterCollection $parent, string $className, string $interface): bool
     {
         if (basename(str_replace('\\', '/', get_class($parent->parent()))) != $className) {
             return true;
@@ -61,7 +61,7 @@ class FilterAbstract
     /**
      * @return FilterCollection
      */
-    public function parent() : FilterCollection
+    public function parent(): FilterCollection
     {
         return $this->parent;
     }
@@ -69,7 +69,7 @@ class FilterAbstract
     /**
      * @return Media
      */
-    public function media() : Media
+    public function media(): Media
     {
         return $this->parent()->parent()->media();
     }

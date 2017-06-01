@@ -1,17 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Data;
 
 abstract class ManipulableAbstract
 {
-    /**
-     * @var FilterCollection
-     */
+    /** @var FilterCollection */
     protected $filters;
 
-    /**
-     * @var Media
-     */
+    /** @var Media */
     protected $media;
 
     /**
@@ -25,7 +23,7 @@ abstract class ManipulableAbstract
     /**
      * @return FilterCollection
      */
-    public function filters() : FilterCollection
+    public function filters(): FilterCollection
     {
         return $this->filters;
     }
@@ -33,9 +31,9 @@ abstract class ManipulableAbstract
     /**
      * @param Media $media
      *
-     * @return self
+     * @return ManipulableAbstract
      */
-    public function setMedia(Media $media) : self
+    public function setMedia(Media $media): ManipulableAbstract
     {
         $this->media = $media;
 
@@ -45,7 +43,7 @@ abstract class ManipulableAbstract
     /**
      * @return Media
      */
-    public function media() : Media
+    public function media(): Media
     {
         return $this->media;
     }

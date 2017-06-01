@@ -1,19 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Filter;
 
 use Jmoati\FFMpeg\Data\Timecode;
 
 class ClipFilter extends FilterAbstract implements FormatFilterInterface, StreamFilterInterface
 {
-    /**
-     * @var Timecode
-     */
+    /** @var Timecode */
     protected $start;
 
-    /**
-     * @var Timecode
-     */
+    /** @var Timecode */
     protected $duration;
 
     /**
@@ -29,7 +27,7 @@ class ClipFilter extends FilterAbstract implements FormatFilterInterface, Stream
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         $result = [];
 

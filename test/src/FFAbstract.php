@@ -1,29 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Test;
 
 use PHPUnit\Framework\TestCase;
 
 abstract class FFAbstract extends TestCase
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $filenameAudio;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $filenameVideo;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $filenameDestination = '/tmp/destination.mov';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $filenameFrameDestination = '/tmp/destination.jpg';
 
     /**

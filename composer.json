@@ -5,10 +5,10 @@
     "require": {
         "php": ">=7.1",
         "symfony/process": "~3.0",
-        "symfony/filesystem": "~3.0",
-        "jmoati/ffmpeg-x64-bin": "~3.0"
+        "symfony/filesystem": "~3.0"
     },
     "require-dev": {
+        "jmoati/ffmpeg-x64-bin": "~3.0",
         "phpunit/phpunit": "~6.0"
     },
     "authors": [

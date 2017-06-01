@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Data;
 
 use Jmoati\FFMpeg\Builder\CommandBuilder;
@@ -9,24 +11,16 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class Media
 {
-    /**
-     * @var StreamCollection
-     */
+    /** @var StreamCollection */
     protected $streams;
 
-    /**
-     * @var Format
-     */
+    /** @var Format */
     protected $format;
 
-    /**
-     * @var FFmpeg
-     */
+    /** @var FFmpeg */
     protected $ffmpeg;
 
-    /**
-     * @var Filesystem
-     */
+    /** @var Filesystem */
     protected $fs;
 
     /**
@@ -41,19 +35,9 @@ class Media
         $this->fs = new Filesystem();
         $this->ffmpeg = $ffmpeg;
 
-        if (null === $streams) {
-            $this->streams = new StreamCollection();
-        } else {
-            $this->streams = $streams;
-        }
-
+        $this->streams = (null === $streams) ? new StreamCollection(): $streams;
         $this->streams->setMedia($this);
-
-        if (null === $format) {
-            $this->format = new Format();
-        } else {
-            $this->format = $format;
-        }
+        $this->format = (null === $format) ? new Format(): $format;
 
         $this->format->setMedia($this);
     }
@@ -61,7 +45,7 @@ class Media
     /**
      * @return StreamCollection
      */
-    public function streams() : StreamCollection
+    public function streams(): StreamCollection
     {
         return $this->streams;
     }
@@ -69,7 +53,7 @@ class Media
     /**
      * @return Format
      */
-    public function format() : Format
+    public function format(): Format
     {
         return $this->format;
     }
@@ -77,7 +61,7 @@ class Media
     /**
      * @return FFMpeg
      */
-    public function ffmpeg() : FFMpeg
+    public function ffmpeg(): FFMpeg
     {
         return $this->ffmpeg;
     }
@@ -87,7 +71,7 @@ class Media
      *
      * @return Frame
      */
-    public function frame(Timecode $timecode) : Frame
+    public function frame(Timecode $timecode): Frame
     {
         return new Frame($this, $timecode);
     }
@@ -97,7 +81,7 @@ class Media
      *
      * @return int
      */
-    public function getFrameCount(Output $output) : int
+    public function getFrameCount(Output $output): int
     {
         $commandBuilder = new CommandBuilder($this, $output, true);
         $frames = 0;
@@ -127,7 +111,7 @@ class Media
      *
      * @return Media
      */
-    protected function setCallbackProperty(ProgressInterface $callback = null, string $property, int $value) : Media
+    protected function setCallbackProperty(ProgressInterface $callback = null, string $property, int $value): Media
     {
         if (null !== $callback && property_exists($callback, $property)) {
             $callback->$property = $value;
@@ -143,7 +127,7 @@ class Media
      *
      * @return bool
      */
-    public function save(string $filename, Output $output, ProgressInterface $callback = null) : bool
+    public function save(string $filename, Output $output, ProgressInterface $callback = null): bool
     {
         $commandBuilder = new CommandBuilder($this, $output);
         $tmpDir = sys_get_temp_dir().'/'.sha1(uniqid()).'/';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Builder;
 
 use Jmoati\FFMpeg\Data\Media;
@@ -7,29 +9,19 @@ use Jmoati\FFMpeg\Data\Output;
 
 class CommandBuilder
 {
-    /**
-     * @var Media
-     */
+    /** @var Media */
     protected $media;
 
-    /**
-     * @var Output
-     */
+    /** @var Output */
     protected $output;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $files = [];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $params = [];
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $dryRun;
 
     /**
@@ -37,7 +29,7 @@ class CommandBuilder
      * @param Output|null $output
      * @param bool        $dryRun
      */
-    public function __construct(Media $media, Output $output = null, $dryRun = false)
+    public function __construct(Media $media, Output $output = null, bool $dryRun = false)
     {
         $this->media = $media;
         $this->output = $output;
@@ -47,7 +39,7 @@ class CommandBuilder
     /**
      * @return string
      */
-    public function computeInputs() : string
+    public function computeInputs(): string
     {
         $result = [];
 
@@ -77,7 +69,7 @@ class CommandBuilder
      *
      * @return string
      */
-    public function computePasses(int $i, int $total, string $tmpDir) : string
+    public function computePasses(int $i, int $total, string $tmpDir): string
     {
         return 1 === $total ? '' : sprintf(
             '-pass %d -passlogfile %s',
@@ -89,7 +81,7 @@ class CommandBuilder
     /**
      * @return string
      */
-    public function computeFormatFilters() : string
+    public function computeFormatFilters(): string
     {
         return (string) $this->media->format()->filters();
     }
@@ -97,7 +89,7 @@ class CommandBuilder
     /**
      * @return string
      */
-    public function computeParams() : string
+    public function computeParams(): string
     {
         if (null === $this->output) {
             return '';
@@ -109,9 +101,9 @@ class CommandBuilder
             $originalRatio = $originalWidth / $originalHeight;
 
             if (null === $this->output->getWidth()) {
-                $this->output->setWidth(round($this->output->getHeight() * $originalRatio));
+                $this->output->setWidth((int)round($this->output->getHeight() * $originalRatio));
             } else {
-                $this->output->setHeight(round($this->output->getWidth() / $originalRatio));
+                $this->output->setHeight((int)round($this->output->getWidth() / $originalRatio));
             }
 
             if ($this->output->getUpscale()) {
@@ -122,8 +114,8 @@ class CommandBuilder
                 }
             } else {
                 if (($this->output->getWidth() > $originalWidth) || ($this->output->getHeight() > $originalHeight)) {
-                    $this->output->setWidth($originalWidth);
-                    $this->output->setHeight($originalHeight);
+                    $this->output->setWidth((int)$originalWidth);
+                    $this->output->setHeight((int)$originalHeight);
                 }
             }
 

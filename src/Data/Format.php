@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Data;
 
 /**
@@ -12,7 +14,7 @@ class Format extends DataCollectionAbstract
      *
      * @return string
      */
-    public function getFilename() : string
+    public function getFilename(): string
     {
         return $this->get('filename');
     }
@@ -22,7 +24,7 @@ class Format extends DataCollectionAbstract
      *
      * @return float The duration (in seconds)
      */
-    public function getDuration() : float
+    public function getDuration(): float
     {
         return floatval($this->get('duration'));
     }

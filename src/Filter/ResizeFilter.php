@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Filter;
 
 use Jmoati\FFMpeg\Data\Dimension;
@@ -11,14 +13,10 @@ class ResizeFilter extends FilterAbstract implements FormatFilterInterface, Fram
     public const MODE_MAX_WIDTH = 2;
     public const MODE_MAX_HEIGHT = 4;
 
-    /**
-     * @var Dimension
-     */
+    /** @var Dimension */
     protected $dimension;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $mode;
 
     /**
@@ -34,10 +32,10 @@ class ResizeFilter extends FilterAbstract implements FormatFilterInterface, Fram
     /**
      * @return Dimension
      */
-    protected function compute() : Dimension
+    protected function compute(): Dimension
     {
         $source = $this->media()->streams()->videos()->first();
-        $source_dimension = new Dimension($source->get('width'), $source->get('height'));
+        $source_dimension = new Dimension((int)$source->get('width'), (int)$source->get('height'));
 
         if (self::MODE_MAX_HEIGHT == $this->mode || (self::MODE_INSET == $this->mode && $this->dimension->getRatio() > $source_dimension->getRatio())) {
             $this->dimension->setWidth($this->dimension->getHeight() * $source_dimension->getRatio());
@@ -59,7 +57,7 @@ class ResizeFilter extends FilterAbstract implements FormatFilterInterface, Fram
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return sprintf('-s %s', (string) $this->compute());
     }

@@ -1,62 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Data;
 
 class Output
 {
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     protected $audioKiloBitrate;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     protected $audioCodec;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     protected $audioRate;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     protected $frameRate;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     protected $videoKiloBitrate;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     protected $videoCodec;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     protected $format;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $passes = 1;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $extraParams = [];
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     protected $width;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     protected $height;
 
     /**
@@ -74,7 +54,7 @@ class Output
      *
      * @return Output
      */
-    public function setAudioCodec($audioCodec) : Output
+    public function setAudioCodec($audioCodec): Output
     {
         $this->audioCodec = $audioCodec;
 
@@ -84,7 +64,7 @@ class Output
     /**
      * @return string|null
      */
-    public function getAudioCodec() : ?string
+    public function getAudioCodec(): ?string
     {
         return $this->audioCodec;
     }
@@ -94,7 +74,7 @@ class Output
      *
      * @return Output
      */
-    public function setAudioKiloBitrate(int $audioKiloBitrate) : Output
+    public function setAudioKiloBitrate(int $audioKiloBitrate): Output
     {
         $this->audioKiloBitrate = $audioKiloBitrate;
 
@@ -104,7 +84,7 @@ class Output
     /**
      * @return int|null
      */
-    public function getAudioKiloBitrate() : ?int
+    public function getAudioKiloBitrate(): ?int
     {
         return $this->audioKiloBitrate;
     }
@@ -114,7 +94,7 @@ class Output
      *
      * @return Output
      */
-    public function setExtraParams(array $extraParams) : Output
+    public function setExtraParams(array $extraParams): Output
     {
         $this->extraParams = $extraParams;
 
@@ -127,7 +107,7 @@ class Output
      *
      * @return Output
      */
-    public function addExtraParam(string $param, $value = null) : Output
+    public function addExtraParam(string $param, $value = null): Output
     {
         $this->extraParams[$param] = $value;
 
@@ -137,7 +117,7 @@ class Output
     /**
      * @return array
      */
-    public function getExtraParams() : array
+    public function getExtraParams(): array
     {
         return $this->extraParams;
     }
@@ -145,9 +125,9 @@ class Output
     /**
      * @param string $format
      *
-     * @return self
+     * @return Output
      */
-    public function setFormat(string $format) : self
+    public function setFormat(string $format): Output
     {
         $this->format = $format;
 
@@ -157,7 +137,7 @@ class Output
     /**
      * @return string|null
      */
-    public function getFormat() : ?string
+    public function getFormat(): ?string
     {
         return $this->format;
     }
@@ -167,7 +147,7 @@ class Output
      *
      * @return Output
      */
-    public function setPasses(int $passes) : Output
+    public function setPasses(int $passes): Output
     {
         $this->passes = $passes;
 
@@ -177,7 +157,7 @@ class Output
     /**
      * @return int
      */
-    public function getPasses() : int
+    public function getPasses(): int
     {
         return $this->passes;
     }
@@ -187,7 +167,7 @@ class Output
      *
      * @return Output
      */
-    public function setWidth(int $width) : Output
+    public function setWidth(int $width): Output
     {
         $this->width = $width - ($width % 2);
 
@@ -199,7 +179,7 @@ class Output
      *
      * @return Output
      */
-    public function setHeight(int $height) : Output
+    public function setHeight(int $height): Output
     {
         $this->height = $height - ($height % 2);
 
@@ -209,7 +189,7 @@ class Output
     /**
      * @return int|null
      */
-    public function getWidth() : ?int
+    public function getWidth(): ?int
     {
         return $this->width;
     }
@@ -217,7 +197,7 @@ class Output
     /**
      * @return int|null
      */
-    public function getHeight() : ?int
+    public function getHeight(): ?int
     {
         return $this->height;
     }
@@ -227,7 +207,7 @@ class Output
      *
      * @return Output
      */
-    public function setSize(string $size) : Output
+    public function setSize(string $size): Output
     {
         $size = explode('x', $size);
 
@@ -247,7 +227,7 @@ class Output
      *
      * @return Output
      */
-    public function setUpscale(bool $upscale) : Output
+    public function setUpscale(bool $upscale): Output
     {
         $this->upscale = $upscale;
 
@@ -257,7 +237,7 @@ class Output
     /**
      * @return bool
      */
-    public function getUpscale() : bool
+    public function getUpscale(): bool
     {
         return $this->upscale;
     }
@@ -267,7 +247,7 @@ class Output
      *
      * @return Output
      */
-    public function setVideoCodec(string $videoCodec) : Output
+    public function setVideoCodec(string $videoCodec): Output
     {
         $this->videoCodec = $videoCodec;
 
@@ -277,7 +257,7 @@ class Output
     /**
      * @return string|null
      */
-    public function getVideoCodec() : ?string
+    public function getVideoCodec(): ?string
     {
         return $this->videoCodec;
     }
@@ -287,7 +267,7 @@ class Output
      *
      * @return Output
      */
-    public function setAudioRate(string $audioRate) : Output
+    public function setAudioRate(string $audioRate): Output
     {
         $this->audioRate = $audioRate;
 
@@ -297,7 +277,7 @@ class Output
     /**
      * @return string|null
      */
-    public function getAudioRate() : ?string
+    public function getAudioRate(): ?string
     {
         return $this->audioRate;
     }
@@ -307,7 +287,7 @@ class Output
      *
      * @return Output
      */
-    public function setFrameRate(int $frameRate) : Output
+    public function setFrameRate(int $frameRate): Output
     {
         $this->frameRate = $frameRate;
 
@@ -317,7 +297,7 @@ class Output
     /**
      * @return int|null
      */
-    public function getFrameRate() : ?int
+    public function getFrameRate(): ?int
     {
         return $this->frameRate;
     }
@@ -327,7 +307,7 @@ class Output
      *
      * @return Output
      */
-    public function setVideoKiloBitrate(int $videoKiloBitrate) : Output
+    public function setVideoKiloBitrate(int $videoKiloBitrate): Output
     {
         $this->videoKiloBitrate = $videoKiloBitrate;
 
@@ -337,7 +317,7 @@ class Output
     /**
      * @return int|null
      */
-    public function getVideoKiloBitrate() : ?int
+    public function getVideoKiloBitrate(): ?int
     {
         return $this->videoKiloBitrate;
     }
@@ -345,7 +325,7 @@ class Output
     /**
      * @return Output
      */
-    public static function create() : Output
+    public static function create(): Output
     {
         return new static();
     }
@@ -353,7 +333,7 @@ class Output
     /**
      * @return Output
      */
-    public function clearMaps() : Output
+    public function clearMaps(): Output
     {
         $this->maps = [];
 
@@ -365,7 +345,7 @@ class Output
      *
      * @return Output
      */
-    public function addMap(string $map) : Output
+    public function addMap(string $map): Output
     {
         $this->maps[] = $map;
 
@@ -375,7 +355,7 @@ class Output
     /**
      * @return array
      */
-    public function getMaps() : array
+    public function getMaps(): array
     {
         return $this->maps;
     }
@@ -388,7 +368,7 @@ class Output
      *
      * @return Output
      */
-    protected function setParam(array &$params, string $key, string $getter, string $suffix = '') : Output
+    protected function setParam(array &$params, string $key, string $getter, string $suffix = ''): Output
     {
         if (null !== $this->$getter()) {
             if (is_array($this->$getter())) {
@@ -404,7 +384,7 @@ class Output
     /**
      * @return string[]
      */
-    public function getParams() : array
+    public function getParams(): array
     {
         $params = $this->extraParams;
 

@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Data;
 
 class Frame extends ManipulableAbstract
 {
-    /**
-     * @var Timecode
-     */
+    /** @var Timecode */
     protected $timecode;
 
     /**
@@ -27,7 +27,7 @@ class Frame extends ManipulableAbstract
      *
      * @return bool
      */
-    public function save(string $filename, bool $accurate = false) : bool
+    public function save(string $filename, bool $accurate = false): bool
     {
         if (false === $accurate) {
             $command = sprintf(

@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Data;
 
 abstract class DataCollectionAbstract extends ManipulableAbstract implements \Countable
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $properties;
 
     /**
@@ -24,7 +24,7 @@ abstract class DataCollectionAbstract extends ManipulableAbstract implements \Co
      *
      * @return bool
      */
-    public function has(string $property) : bool
+    public function has(string $property): bool
     {
         return isset($this->properties[$property]);
     }
@@ -34,19 +34,19 @@ abstract class DataCollectionAbstract extends ManipulableAbstract implements \Co
      *
      * @return string|null
      */
-    public function get(string $property) : ?string
+    public function get(string $property): ?string
     {
         if (!isset($this->properties[$property])) {
             return null;
         }
 
-        return $this->properties[$property];
+        return (string) $this->properties[$property];
     }
 
     /**
      * @return int[]
      */
-    public function keys() : array
+    public function keys(): array
     {
         return array_keys($this->properties);
     }
@@ -54,7 +54,7 @@ abstract class DataCollectionAbstract extends ManipulableAbstract implements \Co
     /**
      * @return string[]
      */
-    public function all() : array
+    public function all(): array
     {
         return $this->properties;
     }
@@ -62,7 +62,7 @@ abstract class DataCollectionAbstract extends ManipulableAbstract implements \Co
     /**
      * @return int
      */
-    public function count() : int
+    public function count(): int
     {
         return count($this->properties);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Test\Data;
 
 use Jmoati\FFMpeg\Data\Timecode;
@@ -26,6 +28,5 @@ class FilterCollectionTest extends FFAbstract
         unset($filters[0]);
 
         $this->assertEquals(0, $filters->count());
-
     }
 }

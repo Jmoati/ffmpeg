@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Filter;
 
 use Jmoati\FFMpeg\Data\FilterCollection;
@@ -10,22 +12,22 @@ interface FilterInterface
     /**
      * @return string
      */
-    public function __toString() : string;
+    public function __toString(): string;
 
     /**
      * @return Media
      */
-    public function media() : Media;
+    public function media(): Media;
 
     /**
      * @param FilterCollection $parent
      *
      * @return FilterAbstract
      */
-    public function setParent(FilterCollection $parent);
+    public function setParent(FilterCollection $parent): FilterAbstract;
 
     /**
      * @return FilterCollection
      */
-    public function parent() : FilterCollection;
+    public function parent(): FilterCollection;
 }
