@@ -212,11 +212,11 @@ class Output
         $size = explode('x', $size);
 
         if ($size[0] > 0) {
-            $this->width = $size[0];
+            $this->width = (int)$size[0];
         }
 
         if ($size[1] > 0) {
-            $this->height = $size[1];
+            $this->height = (int)$size[1];
         }
 
         return $this;

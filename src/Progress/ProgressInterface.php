@@ -7,10 +7,10 @@ namespace Jmoati\FFMpeg\Progress;
 interface ProgressInterface
 {
     /**
-     * @param $type
+     * @param string $type
      * @param string $data
      *
      * @return void
      */
-    public function callback($type, string $data): void;
+    public function callback(string $type, string $data): void;
 }

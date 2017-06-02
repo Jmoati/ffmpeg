@@ -32,7 +32,13 @@ class Progress implements ProgressInterface
     /** @var int */
     public $pourcent = 0;
 
-    public function callback($type, string $data): void
+    /**
+     * @param string $type
+     * @param string $data
+     *
+     * @return void
+     */
+    public function callback(string $type, string $data): void
     {
         if (preg_match('/frame=\s*([0-9]+)\s*fps=\s*([0-9]+)\s*/', $data, $matches)) {
             $this->currentFrame = (integer) $matches[1];
