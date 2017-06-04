@@ -134,7 +134,7 @@ class CommandBuilder
         foreach ($params as $param => $value) {
             if ('maps' == $param) {
                 foreach ($value as $map) {
-                    $result[] = "-map $map";
+                    $result[] = "-map '$map'";
                 }
             } else {
                 $result[] = "-$param $value";

@@ -137,6 +137,7 @@ class Media
         $passes = $output->getPasses();
 
         $this->setCallbackProperty($callback, 'totalPasses', $passes);
+        $process = 0;
 
         for ($i = 0, $l = $passes; $i < $l; ++$i) {
             if (null !== $callback) {
