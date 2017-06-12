@@ -17,7 +17,7 @@ class Media
     /** @var Format */
     protected $format;
 
-    /** @var FFmpeg */
+    /** @var FFMpeg */
     protected $ffmpeg;
 
     /** @var Filesystem */
@@ -68,7 +68,6 @@ class Media
 
     /**
      * @param Timecode $timecode
-     *
      * @return Frame
      */
     public function frame(Timecode $timecode): Frame
@@ -78,7 +77,6 @@ class Media
 
     /**
      * @param Output $output
-     *
      * @return int
      */
     public function getFrameCount(Output $output): int
@@ -108,7 +106,6 @@ class Media
      * @param ProgressInterface|null $callback
      * @param string        $property
      * @param int           $value
-     *
      * @return Media
      */
     protected function setCallbackProperty(ProgressInterface $callback = null, string $property, int $value): Media
@@ -124,7 +121,6 @@ class Media
      * @param string        $filename
      * @param Output        $output
      * @param ProgressInterface|null $callback
-     *
      * @return bool
      */
     public function save(string $filename, Output $output, ProgressInterface $callback = null): bool

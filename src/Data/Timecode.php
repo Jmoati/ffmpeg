@@ -45,7 +45,6 @@ class Timecode
     /**
      * @param int   $frames
      * @param float $fps
-     *
      * @return Timecode
      */
     public static function createFromFrame(int $frames, float $fps): Timecode
@@ -55,7 +54,6 @@ class Timecode
 
     /**
      * @param float $secondes
-     *
      * @return Timecode
      */
     public static function createFromSeconds(float $secondes): Timecode
@@ -65,7 +63,6 @@ class Timecode
 
     /**
      * @param string $string
-     *
      * @return Timecode
      */
     public static function createFromString(string $string): Timecode
@@ -84,7 +81,6 @@ class Timecode
     /**
      * @param int   $frames
      * @param float $fps
-     *
      * @return Timecode
      */
     public function fromFrame(int $frames, float $fps): Timecode
@@ -94,26 +90,24 @@ class Timecode
 
     /**
      * @param float $seconds
-     *
      * @return Timecode
      */
     public function fromSeconds(float $seconds): Timecode
     {
         $left = floor($seconds);
-        $this->frames = round(100 * ($seconds - $left));
-        $this->seconds = $left % 60;
+        $this->frames = (int)round(100 * ($seconds - $left));
+        $this->seconds = (int)($left % 60);
 
-        $left = ($left - $this->seconds) / 60;
+        $left = (int)(($left - $this->seconds) / 60);
 
-        $this->minutes = $left % 60;
-        $this->hours = ($left - $this->minutes) / 60;
+        $this->minutes = (int)($left % 60);
+        $this->hours = (int)(($left - $this->minutes) / 60);
 
         return $this;
     }
 
     /**
      * @param Timecode $timecode
-     *
      * @return Timecode
      */
     public function add(Timecode $timecode): Timecode
@@ -125,7 +119,6 @@ class Timecode
 
     /**
      * @param Timecode $timecode
-     *
      * @return Timecode
      */
     public function subtract(Timecode $timecode): Timecode
@@ -145,17 +138,16 @@ class Timecode
 
     /**
      * @param string $string
-     *
      * @return Timecode
      */
     public function fromString(string $string): Timecode
     {
         preg_match('/^([0-9]+):([0-9]+):([0-9]+)[:,\.]{1}([0-9]+)$/', $string, $matches);
 
-        $this->hours = $matches[1];
-        $this->minutes = $matches[2];
-        $this->seconds = $matches[3];
-        $this->frames = $matches[4];
+        $this->hours = (int)$matches[1];
+        $this->minutes = (int)$matches[2];
+        $this->seconds = (int)$matches[3];
+        $this->frames = (int)$matches[4];
 
         return $this;
     }

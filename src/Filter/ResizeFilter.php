@@ -35,12 +35,12 @@ class ResizeFilter extends FilterAbstract implements FormatFilterInterface, Fram
     protected function compute(): Dimension
     {
         $source = $this->media()->streams()->videos()->first();
-        $source_dimension = new Dimension((int)$source->get('width'), (int)$source->get('height'));
+        $sourceDimension = new Dimension((int)$source->get('width'), (int)$source->get('height'));
 
-        if (self::MODE_MAX_HEIGHT == $this->mode || (self::MODE_INSET == $this->mode && $this->dimension->getRatio() > $source_dimension->getRatio())) {
-            $this->dimension->setWidth($this->dimension->getHeight() * $source_dimension->getRatio());
+        if (self::MODE_MAX_HEIGHT == $this->mode || (self::MODE_INSET == $this->mode && $this->dimension->getRatio() > $sourceDimension->getRatio())) {
+            $this->dimension->setWidth($this->dimension->getHeight() * $sourceDimension->getRatio());
         } elseif (self::MODE_MAX_WIDTH == $this->mode || self::MODE_INSET == $this->mode) {
-            $this->dimension->setHeight($this->dimension->getWidth() / $source_dimension->getRatio());
+            $this->dimension->setHeight($this->dimension->getWidth() / $sourceDimension->getRatio());
         }
 
         foreach ($this->parent() as $filter) {

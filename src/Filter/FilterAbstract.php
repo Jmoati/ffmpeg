@@ -14,9 +14,7 @@ class FilterAbstract
 
     /**
      * @param FilterCollection $parent
-     *
      * @throws \LogicException
-     *
      * @return FilterAbstract
      */
     public function setParent(FilterCollection $parent): FilterAbstract
@@ -34,9 +32,7 @@ class FilterAbstract
      * @param FilterCollection $parent
      * @param string           $className
      * @param string           $interface
-     *
      * @return bool
-     *
      * @throws \LogicException
      */
     protected function checkFilterType(FilterCollection $parent, string $className, string $interface): bool

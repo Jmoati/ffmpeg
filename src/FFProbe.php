@@ -45,7 +45,6 @@ class FFProbe implements FFInterface
 
     /**
      * @param string $filename
-     *
      * @return Format
      */
     public function format(string $filename): Format
@@ -55,7 +54,6 @@ class FFProbe implements FFInterface
 
     /**
      * @param string $filename
-     *
      * @return StreamCollection
      */
     public function streams(string $filename): StreamCollection
@@ -65,7 +63,6 @@ class FFProbe implements FFInterface
 
     /**
      * @param string $filename
-     *
      * @return Media
      */
     public function media(string $filename): Media
@@ -76,9 +73,7 @@ class FFProbe implements FFInterface
     /**
      * @param string $filename
      * @param string $command
-     *
      * @return Format|StreamCollection|Media
-     *
      * @throws \Exception
      */
     protected function probe(string $filename, string $command)
@@ -113,7 +108,6 @@ class FFProbe implements FFInterface
     /**
      * @param string        $command
      * @param mixed|null $callback
-     *
      * @return Process
      */
     public function run(string $command, $callback = null): Process

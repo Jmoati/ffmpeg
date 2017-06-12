@@ -66,7 +66,6 @@ class CommandBuilder
      * @param int    $i
      * @param int    $total
      * @param string $tmpDir
-     *
      * @return string
      */
     public function computePasses(int $i, int $total, string $tmpDir): string
@@ -132,7 +131,7 @@ class CommandBuilder
         }
 
         foreach ($params as $param => $value) {
-            if ('maps' == $param) {
+            if ('maps' == $param && is_array($value)) {
                 foreach ($value as $map) {
                     $result[] = "-map '$map'";
                 }

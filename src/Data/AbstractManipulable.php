@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-abstract class ManipulableAbstract
+abstract class AbstractManipulable
 {
     /** @var FilterCollection */
     protected $filters;
@@ -13,7 +13,7 @@ abstract class ManipulableAbstract
     protected $media;
 
     /**
-     * ManipulableAbstract constructor.
+     * AbstractManipulable constructor.
      */
     public function __construct()
     {
@@ -30,10 +30,9 @@ abstract class ManipulableAbstract
 
     /**
      * @param Media $media
-     *
-     * @return ManipulableAbstract
+     * @return AbstractManipulable
      */
-    public function setMedia(Media $media): ManipulableAbstract
+    public function setMedia(Media $media): AbstractManipulable
     {
         $this->media = $media;
 

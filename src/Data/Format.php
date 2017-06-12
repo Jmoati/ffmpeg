@@ -7,7 +7,7 @@ namespace Jmoati\FFMpeg\Data;
 /**
  * Represents information about the container format.
  */
-class Format extends DataCollectionAbstract
+class Format extends AbstractDataCollection
 {
     /**
      * Returns the filename.

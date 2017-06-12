@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-class Stream extends DataCollectionAbstract
+class Stream extends AbstractDataCollection
 {
     /**
      * Stream constructor.
@@ -54,7 +54,7 @@ class Stream extends DataCollectionAbstract
     }
 
     /**
-     * return boolean.
+     * @return bool
      */
     public function isImage(): bool
     {

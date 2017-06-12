@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-class Frame extends ManipulableAbstract
+class Frame extends AbstractManipulable
 {
     /** @var Timecode */
     protected $timecode;
@@ -24,7 +24,6 @@ class Frame extends ManipulableAbstract
     /**
      * @param string $filename
      * @param bool   $accurate
-     *
      * @return bool
      */
     public function save(string $filename, bool $accurate = false): bool

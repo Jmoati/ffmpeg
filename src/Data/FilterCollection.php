@@ -11,30 +11,29 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /** @var FilterInterface[] */
     protected $filters = [];
 
-    /** @var ManipulableAbstract */
+    /** @var AbstractManipulable */
     protected $parent;
 
     /**
      * FilterCollection constructor.
      *
-     * @param ManipulableAbstract $parent
+     * @param AbstractManipulable $parent
      */
-    public function __construct(ManipulableAbstract $parent)
+    public function __construct(AbstractManipulable $parent)
     {
         $this->parent = $parent;
     }
 
     /**
-     * @return ManipulableAbstract
+     * @return AbstractManipulable
      */
-    public function parent(): ManipulableAbstract
+    public function parent(): AbstractManipulable
     {
         return $this->parent;
     }
 
     /**
      * @param FilterInterface $filter
-     *
      * @return FilterCollection
      */
     public function add(FilterInterface $filter): FilterCollection
@@ -95,7 +94,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param int|string $offset
-     *
      * @return bool
      */
     public function offsetExists($offset): bool
@@ -105,7 +103,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param int|string $offset
-     *
      * @return FilterInterface
      */
     public function offsetGet($offset): FilterInterface
@@ -116,7 +113,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @param int|string $offset
      * @param string     $value
-     *
      * @return FilterCollection
      */
     public function offsetSet($offset, $value): FilterCollection
@@ -128,7 +124,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param int|string $offset
-     *
      * @return FilterCollection
      */
     public function offsetUnset($offset): FilterCollection

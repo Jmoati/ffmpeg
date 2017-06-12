@@ -9,7 +9,6 @@ interface ProgressInterface
     /**
      * @param string $type
      * @param string $data
-     *
      * @return void
      */
     public function callback(string $type, string $data): void;

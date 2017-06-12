@@ -15,7 +15,6 @@ class Dimension
     /**
      * @param int $width
      * @param int $height
-     *
      * @return Dimension
      */
     public static function create(int $width, int $height): Dimension
@@ -25,7 +24,6 @@ class Dimension
 
     /**
      * @param string $string
-     *
      * @return Dimension
      */
     public static function createFromString(string $string): Dimension
@@ -66,7 +64,6 @@ class Dimension
     /**
      * @param int $height
      * @param int $modulo
-     *
      * @return Dimension
      */
     public function setHeight(int $height, int $modulo = 2): Dimension
@@ -79,7 +76,6 @@ class Dimension
     /**
      * @param int $width
      * @param int $modulo
-     *
      * @return Dimension
      */
     public function setWidth(int $width, int $modulo = 2): Dimension

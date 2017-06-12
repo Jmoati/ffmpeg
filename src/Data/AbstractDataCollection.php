@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-abstract class DataCollectionAbstract extends ManipulableAbstract implements \Countable
+abstract class AbstractDataCollection extends AbstractManipulable implements \Countable
 {
     /** @var string[] */
     protected $properties;
@@ -21,7 +21,6 @@ abstract class DataCollectionAbstract extends ManipulableAbstract implements \Co
 
     /**
      * @param string $property
-     *
      * @return bool
      */
     public function has(string $property): bool
@@ -31,7 +30,6 @@ abstract class DataCollectionAbstract extends ManipulableAbstract implements \Co
 
     /**
      * @param string $property
-     *
      * @return string|null
      */
     public function get(string $property): ?string
