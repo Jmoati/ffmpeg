@@ -30,6 +30,7 @@ abstract class AbstractManipulable
 
     /**
      * @param Media $media
+     *
      * @return AbstractManipulable
      */
     public function setMedia(Media $media): AbstractManipulable

@@ -26,16 +26,16 @@ class RotationFilter extends FilterAbstract implements FormatFilterInterface, Fr
     /**
      * @return string
      */
-    public function getRotation(): string
+    public function __toString(): string
     {
-        return $this->rotation;
+        return sprintf('-vf "%s"', $this->rotation);
     }
 
     /**
      * @return string
      */
-    public function __toString(): string
+    public function getRotation(): string
     {
-        return sprintf('-vf "%s"', $this->rotation);
+        return $this->rotation;
     }
 }

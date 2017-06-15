@@ -35,9 +35,9 @@ class Media
         $this->fs = new Filesystem();
         $this->ffmpeg = $ffmpeg;
 
-        $this->streams = (null === $streams) ? new StreamCollection(): $streams;
+        $this->streams = (null === $streams) ? new StreamCollection() : $streams;
         $this->streams->setMedia($this);
-        $this->format = (null === $format) ? new Format(): $format;
+        $this->format = (null === $format) ? new Format() : $format;
 
         $this->format->setMedia($this);
     }
@@ -68,6 +68,7 @@ class Media
 
     /**
      * @param Timecode $timecode
+     *
      * @return Frame
      */
     public function frame(Timecode $timecode): Frame
@@ -77,6 +78,7 @@ class Media
 
     /**
      * @param Output $output
+     *
      * @return int
      */
     public function getFrameCount(Output $output): int
@@ -103,24 +105,10 @@ class Media
     }
 
     /**
+     * @param string                 $filename
+     * @param Output                 $output
      * @param ProgressInterface|null $callback
-     * @param string        $property
-     * @param int           $value
-     * @return Media
-     */
-    protected function setCallbackProperty(ProgressInterface $callback = null, string $property, int $value): Media
-    {
-        if (null !== $callback && property_exists($callback, $property)) {
-            $callback->$property = $value;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param string        $filename
-     * @param Output        $output
-     * @param ProgressInterface|null $callback
+     *
      * @return bool
      */
     public function save(string $filename, Output $output, ProgressInterface $callback = null): bool
@@ -154,7 +142,7 @@ class Media
                 ),
                 get_class($callback) == 'Closure' || null === $callback ?
                     $callback :
-                    array($callback, 'callback')
+                    [$callback, 'callback']
             );
 
             if (0 !== $process->getExitCode()) {
@@ -165,5 +153,21 @@ class Media
         $this->fs->remove($tmpDir);
 
         return 0 === $process->getExitCode();
+    }
+
+    /**
+     * @param ProgressInterface|null $callback
+     * @param string                 $property
+     * @param int                    $value
+     *
+     * @return Media
+     */
+    protected function setCallbackProperty(ProgressInterface $callback = null, string $property, int $value): Media
+    {
+        if (null !== $callback && property_exists($callback, $property)) {
+            $callback->$property = $value;
+        }
+
+        return $this;
     }
 }

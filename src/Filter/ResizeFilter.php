@@ -30,12 +30,20 @@ class ResizeFilter extends FilterAbstract implements FormatFilterInterface, Fram
     }
 
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return sprintf('-s %s', (string) $this->compute());
+    }
+
+    /**
      * @return Dimension
      */
     protected function compute(): Dimension
     {
         $source = $this->media()->streams()->videos()->first();
-        $sourceDimension = new Dimension((int)$source->get('width'), (int)$source->get('height'));
+        $sourceDimension = new Dimension((int) $source->get('width'), (int) $source->get('height'));
 
         if (self::MODE_MAX_HEIGHT == $this->mode || (self::MODE_INSET == $this->mode && $this->dimension->getRatio() > $sourceDimension->getRatio())) {
             $this->dimension->setWidth($this->dimension->getHeight() * $sourceDimension->getRatio());
@@ -52,13 +60,5 @@ class ResizeFilter extends FilterAbstract implements FormatFilterInterface, Fram
         }
 
         return $this->dimension;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return sprintf('-s %s', (string) $this->compute());
     }
 }

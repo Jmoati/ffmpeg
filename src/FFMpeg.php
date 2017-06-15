@@ -16,20 +16,8 @@ class FFMpeg implements FFInterface
     protected $bin;
 
     /**
-     * @param FFProbe|null $ffprobe
-     * @return FFMpeg
-     */
-    public static function create(FFProbe $ffprobe = null): FFMpeg
-    {
-        if (null === $ffprobe) {
-            $ffprobe = new FFProbe();
-        }
-
-        return new static($ffprobe);
-    }
-
-    /**
      * FFMpeg constructor.
+     *
      * @param FFProbe $ffprobe
      */
     public function __construct(FFProbe $ffprobe)
@@ -49,6 +37,20 @@ class FFMpeg implements FFInterface
     }
 
     /**
+     * @param FFProbe|null $ffprobe
+     *
+     * @return FFMpeg
+     */
+    public static function create(FFProbe $ffprobe = null): FFMpeg
+    {
+        if (null === $ffprobe) {
+            $ffprobe = new FFProbe();
+        }
+
+        return new static($ffprobe);
+    }
+
+    /**
      * @return Media
      */
     public static function createFile(): Media
@@ -58,6 +60,7 @@ class FFMpeg implements FFInterface
 
     /**
      * @param string $filename
+     *
      * @return Media
      */
     public static function openFile(string $filename): Media
@@ -68,6 +71,7 @@ class FFMpeg implements FFInterface
     /**
      * @param string        $command
      * @param callable|null $callback
+     *
      * @return Process
      */
     public function run(string $command, $callback = null): Process

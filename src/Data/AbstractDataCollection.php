@@ -6,11 +6,11 @@ namespace Jmoati\FFMpeg\Data;
 
 abstract class AbstractDataCollection extends AbstractManipulable implements \Countable
 {
-    /** @var string[] */
+    /** @var array */
     protected $properties;
 
     /**
-     * @param string[] $properties
+     * @param array $properties
      */
     public function __construct(array $properties = [])
     {
@@ -21,6 +21,7 @@ abstract class AbstractDataCollection extends AbstractManipulable implements \Co
 
     /**
      * @param string $property
+     *
      * @return bool
      */
     public function has(string $property): bool
@@ -30,15 +31,16 @@ abstract class AbstractDataCollection extends AbstractManipulable implements \Co
 
     /**
      * @param string $property
-     * @return string|null
+     *
+     * @return mixed
      */
-    public function get(string $property): ?string
+    public function get(string $property)
     {
         if (!isset($this->properties[$property])) {
             return null;
         }
 
-        return (string) $this->properties[$property];
+        return $this->properties[$property];
     }
 
     /**

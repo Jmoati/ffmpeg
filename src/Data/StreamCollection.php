@@ -33,6 +33,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param Stream $stream
+     *
      * @return StreamCollection
      */
     public function add(Stream $stream): StreamCollection
@@ -45,6 +46,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param Stream $stream
+     *
      * @return StreamCollection
      */
     public function remove(Stream $stream): StreamCollection
@@ -124,6 +126,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param string|int $offset
+     *
      * @return bool
      */
     public function offsetExists($offset): bool
@@ -133,6 +136,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param string|int $offset
+     *
      * @return Stream
      */
     public function offsetGet($offset): Stream
@@ -143,6 +147,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @param string|int $offset
      * @param Stream     $value
+     *
      * @return StreamCollection
      */
     public function offsetSet($offset, $value): StreamCollection
@@ -154,6 +159,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param string|int $offset
+     *
      * @return StreamCollection
      */
     public function offsetUnset($offset): StreamCollection
@@ -165,6 +171,7 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param Media $media
+     *
      * @return StreamCollection
      */
     public function setMedia(Media $media): StreamCollection

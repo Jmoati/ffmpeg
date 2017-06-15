@@ -26,6 +26,6 @@ class Format extends AbstractDataCollection
      */
     public function getDuration(): float
     {
-        return floatval($this->get('duration'));
+        return (float) ($this->get('duration'));
     }
 }

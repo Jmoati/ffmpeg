@@ -9,7 +9,7 @@ class Stream extends AbstractDataCollection
     /**
      * Stream constructor.
      *
-     * @param \string[] $properties
+     * @param array $properties
      */
     public function __construct(array $properties)
     {
@@ -28,13 +28,12 @@ class Stream extends AbstractDataCollection
         parent::__construct($properties);
     }
 
-
     /**
      * @return bool
      */
     public function isAudio(): bool
     {
-        return $this->has('codec_type') ? 'audio' === $this->get('codec_type'): false;
+        return $this->has('codec_type') ? 'audio' === $this->get('codec_type') : false;
     }
 
     /**
@@ -42,7 +41,7 @@ class Stream extends AbstractDataCollection
      */
     public function isVideo(): bool
     {
-        return $this->has('codec_type') ? 'video' === $this->get('codec_type'): false;
+        return $this->has('codec_type') ? 'video' === $this->get('codec_type') : false;
     }
 
     /**
@@ -50,7 +49,7 @@ class Stream extends AbstractDataCollection
      */
     public function isData(): bool
     {
-        return $this->has('codec_type') ? 'data' === $this->get('codec_type'): false;
+        return $this->has('codec_type') ? 'data' === $this->get('codec_type') : false;
     }
 
     /**

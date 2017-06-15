@@ -66,6 +66,7 @@ class CommandBuilder
      * @param int    $i
      * @param int    $total
      * @param string $tmpDir
+     *
      * @return string
      */
     public function computePasses(int $i, int $total, string $tmpDir): string
@@ -100,9 +101,9 @@ class CommandBuilder
             $originalRatio = $originalWidth / $originalHeight;
 
             if (null === $this->output->getWidth()) {
-                $this->output->setWidth((int)round($this->output->getHeight() * $originalRatio));
+                $this->output->setWidth((int) round($this->output->getHeight() * $originalRatio));
             } else {
-                $this->output->setHeight((int)round($this->output->getWidth() / $originalRatio));
+                $this->output->setHeight((int) round($this->output->getWidth() / $originalRatio));
             }
 
             if ($this->output->getUpscale()) {
@@ -113,8 +114,8 @@ class CommandBuilder
                 }
             } else {
                 if (($this->output->getWidth() > $originalWidth) || ($this->output->getHeight() > $originalHeight)) {
-                    $this->output->setWidth((int)$originalWidth);
-                    $this->output->setHeight((int)$originalHeight);
+                    $this->output->setWidth((int) $originalWidth);
+                    $this->output->setHeight((int) $originalHeight);
                 }
             }
 

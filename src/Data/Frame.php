@@ -24,6 +24,7 @@ class Frame extends AbstractManipulable
     /**
      * @param string $filename
      * @param bool   $accurate
+     *
      * @return bool
      */
     public function save(string $filename, bool $accurate = false): bool

@@ -21,6 +21,7 @@ interface FilterInterface
 
     /**
      * @param FilterCollection $parent
+     *
      * @return FilterAbstract
      */
     public function setParent(FilterCollection $parent): FilterAbstract;

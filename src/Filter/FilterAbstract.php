@@ -14,7 +14,9 @@ class FilterAbstract
 
     /**
      * @param FilterCollection $parent
+     *
      * @throws \LogicException
+     *
      * @return FilterAbstract
      */
     public function setParent(FilterCollection $parent): FilterAbstract
@@ -29,11 +31,29 @@ class FilterAbstract
     }
 
     /**
+     * @return FilterCollection
+     */
+    public function parent(): FilterCollection
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @return Media
+     */
+    public function media(): Media
+    {
+        return $this->parent()->parent()->media();
+    }
+
+    /**
      * @param FilterCollection $parent
      * @param string           $className
      * @param string           $interface
-     * @return bool
+     *
      * @throws \LogicException
+     *
+     * @return bool
      */
     protected function checkFilterType(FilterCollection $parent, string $className, string $interface): bool
     {
@@ -52,21 +72,5 @@ class FilterAbstract
             basename(str_replace('\\', '/', get_class($this))),
             $className
         ));
-    }
-
-    /**
-     * @return FilterCollection
-     */
-    public function parent(): FilterCollection
-    {
-        return $this->parent;
-    }
-
-    /**
-     * @return Media
-     */
-    public function media(): Media
-    {
-        return $this->parent()->parent()->media();
     }
 }
