@@ -111,7 +111,7 @@ class Media
      *
      * @return bool
      */
-    public function save(string $filename, Output $output, ProgressInterface $callback = null): bool
+    public function save(string $filename, Output $output, ProgressInterface $callback = null, $debug = false): bool
     {
         $commandBuilder = new CommandBuilder($this, $output);
         $tmpDir = sys_get_temp_dir().'/'.sha1(uniqid()).'/';

@@ -18,8 +18,19 @@ use Jmoati\FFMpeg\Filter\RotationFilter;
 use Jmoati\FFMpeg\Test\Progress\Progress;
 use Symfony\Component\Filesystem\Filesystem;
 
-class FFMpegTest extends FFAbstract
+class FFMpegTest extends SampleTestCase
 {
+
+    public function setUp()
+    {
+        $this->tearDown();
+    }
+
+    public function tearDown()
+    {
+        (new Filesystem())->remove($this->filenameDestination);
+        (new Filesystem())->remove($this->filenameFrameDestination);
+    }
     public function testOpenFile()
     {
         $media = FFMpeg::openFile($this->filenameVideo);
@@ -59,7 +70,7 @@ class FFMpegTest extends FFAbstract
 
     public function testEncodage()
     {
-        $video = FFMpeg::openFile($this->filenameVideo);
+        $video = FFMpeg::openFile($this->filenameVideoRotate);
         $audio = FFMpeg::openFile($this->filenameAudio);
 
         $this->assertTrue($video instanceof Media);
@@ -76,29 +87,30 @@ class FFMpegTest extends FFAbstract
 
         $this->assertEquals(2, $new->streams()->count());
 
-        $new->format()->filters()->add(new ClipFilter(Timecode::createFromSeconds(16)));
+        $new->format()->filters()->add(new ClipFilter(Timecode::createFromSeconds(1)));
 
         $this->assertEquals(1, $new->format()->filters()->count());
+        $this->assertEquals(1, count($new->format()->filters()->all()));
 
-        $output = new Output();
+        $output = Output::create()
+            ->setFormat('avi');
+
         $commandBuilder = new CommandBuilder($new, $output);
 
         $inputs = $commandBuilder->computeInputs();
-        $this->assertTrue(is_numeric(strpos($inputs, sprintf('-i "%s"', $this->filenameAudio))));
-        $this->assertTrue(is_numeric(strpos($inputs, sprintf('-i "%s"', $this->filenameVideo))));
+        $this->assertTrue(is_numeric(mb_strpos($inputs, sprintf('-i "%s"', $this->filenameAudio))));
+        $this->assertTrue(is_numeric(mb_strpos($inputs, sprintf('-i "%s"', $this->filenameVideoRotate))));
 
         $filters = $commandBuilder->computeFormatFilters();
-        $this->assertTrue(is_numeric(strpos($filters, sprintf('-t %s', Timecode::createFromSeconds(16)))));
+        $this->assertTrue(is_numeric(mb_strpos($filters, sprintf('-t %s', Timecode::createFromSeconds(1)))));
 
         $result = $new->save($this->filenameDestination, $output);
         $this->assertTrue(file_exists($this->filenameDestination));
         $this->assertTrue($result);
 
         $check = FFMpeg::openFile($this->filenameDestination);
-        $videoStream = $check->streams()->videos()->first();
 
-        $this->assertEquals(16, floor($check->format()->get('duration')));
-        $this->assertGreaterThan($videoStream->get('height'), $videoStream->get('width'));
+        $this->assertEquals(1, floor($check->format()->get('duration')));
     }
 
     public function testFilter()
@@ -110,7 +122,7 @@ class FFMpegTest extends FFAbstract
         $rotationFilter = new RotationFilter(RotationFilter::ROTATION_90);
         $resizeFilter = new ResizeFilter($dimension);
 
-        $video->format()->filters()->add(new ClipFilter(Timecode::createFromSeconds(10), Timecode::createFromSeconds(5)));
+        $video->format()->filters()->add(new ClipFilter(Timecode::createFromSeconds(1), Timecode::createFromSeconds(5)));
         $video->format()->filters()->add($rotationFilter);
         $video->format()->filters()->add($resizeFilter);
 
@@ -118,26 +130,31 @@ class FFMpegTest extends FFAbstract
             ->setVideoKiloBitrate(1200)
             ->setHeight((int)($video->streams()->videos()->first()->get('height') * 2))
             ->setUpscale(true)
-            ->setPasses(2);
+            ->setVideoCodec('h264');
 
         $commandBuilder = new CommandBuilder($video, $output);
 
         $inputs = $commandBuilder->computeInputs();
-        $this->assertTrue(is_numeric(strpos($inputs, sprintf('-i "%s"', $this->filenameVideo))));
+        $this->assertTrue(is_numeric(mb_strpos($inputs, sprintf('-i "%s"', $this->filenameVideo))));
 
         $filters = $commandBuilder->computeFormatFilters();
 
-        $this->assertTrue(is_numeric(strpos($filters, sprintf('-ss %s', Timecode::createFromSeconds(5)))));
-        $this->assertTrue(is_numeric(strpos($filters, sprintf('-t %s', Timecode::createFromSeconds(10)))));
-        $this->assertTrue(is_numeric(strpos($filters, 'transpose=1')));
+        $this->assertTrue(is_numeric(mb_strpos($filters, sprintf('-ss %s', Timecode::createFromSeconds(5)))));
+        $this->assertTrue(is_numeric(mb_strpos($filters, sprintf('-t %s', Timecode::createFromSeconds(1)))));
+        $this->assertTrue(is_numeric(mb_strpos($filters, 'transpose=1')));
 
         $result = $video->save($this->filenameDestination, $output);
+
+        if (false === $result) {
+            $result = $video->save($this->filenameDestination, $output, null, true);
+        }
+
         $this->assertTrue(file_exists($this->filenameDestination));
         $this->assertTrue($result);
 
         $check = FFMpeg::openFile($this->filenameDestination);
 
-        $this->assertEquals(10, floor($check->format()->get('duration')));
+        $this->assertEquals(1, floor($check->format()->get('duration')));
         $this->assertEquals(3, $video->format()->filters()->count());
 
         $video->format()->filters()->clear();
@@ -160,7 +177,6 @@ class FFMpegTest extends FFAbstract
 
         $result = $frame->save($this->filenameFrameDestination, true);
         $this->assertTrue($result);
-
         $this->assertTrue(file_exists($this->filenameFrameDestination));
     }
 
@@ -170,19 +186,22 @@ class FFMpegTest extends FFAbstract
         $video = FFMpeg::openFile($this->filenameVideo);
         $video->format()->filters()->add(new ClipFilter(Timecode::createFromSeconds(1)));
 
-        $result = $video->save($this->filenameDestination, Output::create(), $progress);
+        $output = Output::create()
+            ->setVideoKiloBitrate(10)
+            ->setPasses(2);
+
+        $result = $video->save($this->filenameDestination, $output, $progress);
         $this->assertTrue(file_exists($this->filenameDestination));
         $this->assertTrue($result);
     }
 
-    public function setUp()
+    public function testFail()
     {
-        $this->tearDown();
-    }
+        $media = FFMpeg::openFile($this->filenameImage);
+        $output = Output::create()
+            ->setHeight(1)
+            ->setWidth(1);
 
-    public function tearDown()
-    {
-        (new Filesystem())->remove($this->filenameDestination);
-        (new Filesystem())->remove($this->filenameFrameDestination);
+        $this->assertFalse($media->save('/dev/null/test', $output));
     }
 }

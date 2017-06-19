@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Test;
 
-use Jmoati\FFMpeg\Data\Stream;
-use Jmoati\FFMpeg\FFProbe;
 use Jmoati\FFMpeg\Data\Format;
-use Jmoati\FFMpeg\Data\StreamCollection;
 use Jmoati\FFMpeg\Data\Media;
+use Jmoati\FFMpeg\Data\Stream;
+use Jmoati\FFMpeg\Data\StreamCollection;
+use Jmoati\FFMpeg\FFProbe;
 
-class FFProbeTest extends FFAbstract
+class FFProbeTest extends SampleTestCase
 {
     public function testFormat()
     {
