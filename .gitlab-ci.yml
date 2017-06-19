@@ -1,0 +1,16 @@
+image: dockenizer/dev
+
+cache:
+  paths:
+  - vendor/
+
+before_script:
+- composer install
+
+phpunit:
+  script:
+  - vendor/bin/phpunit
+  
+phpstan:
+  script:
+  - vendor/bin/phpstan analyse --level=4 src test
