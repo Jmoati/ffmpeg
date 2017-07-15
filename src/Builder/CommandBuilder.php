@@ -54,6 +54,7 @@ class CommandBuilder
         }
 
         if (!(null !== $this->output && isset($this->output->getParams()['maps']))) {
+
             foreach ($this->media->streams() as $index => $stream) {
                 $result[] = sprintf('-map %s:%s', $index, $stream->get('index'));
             }

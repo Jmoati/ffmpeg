@@ -9,8 +9,9 @@ use Jmoati\FFMpeg\FFMpeg;
 use Jmoati\FFMpeg\Filter\ClipFilter;
 use Jmoati\FFMpeg\Filter\FilterInterface;
 use Jmoati\FFMpeg\Test\FFAbstract;
+use Jmoati\FFMpeg\Test\SampleTestCase;
 
-class FilterCollectionTest extends FFAbstract
+class FilterCollectionTest extends SampleTestCase
 {
     public function test()
     {
