@@ -19,7 +19,7 @@ class FilterAbstract
      *
      * @return FilterAbstract
      */
-    public function setParent(FilterCollection $parent): FilterAbstract
+    public function setParent(FilterCollection $parent): self
     {
         $this->checkFilterType($parent, 'Stream', 'StreamFilterInterface');
         $this->checkFilterType($parent, 'Format', 'FormatFilterInterface');

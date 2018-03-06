@@ -6,13 +6,13 @@ namespace Jmoati\FFMpeg\Filter;
 
 use Jmoati\FFMpeg\Data\Timecode;
 
-class ClipFilter extends FilterAbstract implements FormatFilterInterface, StreamFilterInterface
+final class ClipFilter extends FilterAbstract implements FormatFilterInterface, StreamFilterInterface
 {
-    /** @var Timecode */
-    protected $start;
+    /** @var Timecode|null */
+    private $start;
 
-    /** @var Timecode */
-    protected $duration;
+    /** @var Timecode|null */
+    private $duration;
 
     /**
      * @param null|Timecode $duration

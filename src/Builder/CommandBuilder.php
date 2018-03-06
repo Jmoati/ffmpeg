@@ -12,7 +12,7 @@ class CommandBuilder
     /** @var Media */
     protected $media;
 
-    /** @var Output */
+    /** @var Output|null */
     protected $output;
 
     /** @var string[] */
@@ -54,7 +54,6 @@ class CommandBuilder
         }
 
         if (!(null !== $this->output && isset($this->output->getParams()['maps']))) {
-
             foreach ($this->media->streams() as $index => $stream) {
                 $result[] = sprintf('-map %s:%s', $index, $stream->get('index'));
             }
@@ -96,7 +95,7 @@ class CommandBuilder
             return '';
         }
 
-        if (null !== $this->output->getWidth() || null !== $this->output->getHeight()) {
+        if (false !== $this->media->streams()->videos()->first() && (null !== $this->output->getWidth() || null !== $this->output->getHeight())) {
             $originalWidth = $this->media->streams()->videos()->first()->get('width');
             $originalHeight = $this->media->streams()->videos()->first()->get('height');
             $originalRatio = $originalWidth / $originalHeight;

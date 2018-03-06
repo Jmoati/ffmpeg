@@ -7,17 +7,15 @@ namespace Jmoati\FFMpeg;
 use Jmoati\FFMpeg\Data\Media;
 use Symfony\Component\Process\Process;
 
-class FFMpeg implements FFInterface
+final class FFMpeg implements FFInterface
 {
     /** @var FFProbe */
-    protected $ffprobe;
+    private $ffprobe;
 
     /** @var string */
-    protected $bin;
+    private $bin;
 
     /**
-     * FFMpeg constructor.
-     *
      * @param FFProbe $ffprobe
      */
     public function __construct(FFProbe $ffprobe)
@@ -41,7 +39,7 @@ class FFMpeg implements FFInterface
      *
      * @return FFMpeg
      */
-    public static function create(FFProbe $ffprobe = null): FFMpeg
+    public static function create(FFProbe $ffprobe = null): self
     {
         if (null === $ffprobe) {
             $ffprobe = new FFProbe();
@@ -61,6 +59,8 @@ class FFMpeg implements FFInterface
     /**
      * @param string $filename
      *
+     * @throws \Exception
+     *
      * @return Media
      */
     public static function openFile(string $filename): Media
@@ -74,7 +74,7 @@ class FFMpeg implements FFInterface
      *
      * @return Process
      */
-    public function run(string $command, $callback = null): Process
+    public function run(string $command, callable $callback = null): Process
     {
         $process = new Process('nice '.$this->bin.' '.$command, null, null, null, 0);
         $process->run($callback);

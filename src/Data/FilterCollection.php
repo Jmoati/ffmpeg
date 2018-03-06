@@ -15,8 +15,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     protected $parent;
 
     /**
-     * FilterCollection constructor.
-     *
      * @param AbstractManipulable $parent
      */
     public function __construct(AbstractManipulable $parent)
@@ -50,7 +48,7 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return FilterCollection
      */
-    public function add(FilterInterface $filter): FilterCollection
+    public function add(FilterInterface $filter): self
     {
         $newFilter = clone $filter;
         $newFilter->setParent($this);
@@ -62,7 +60,7 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @return FilterCollection
      */
-    public function clear(): FilterCollection
+    public function clear(): self
     {
         $this->filters = [];
 
@@ -119,7 +117,7 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return FilterCollection
      */
-    public function offsetSet($offset, $value): FilterCollection
+    public function offsetSet($offset, $value): self
     {
         $this->filters[$offset] = $value;
 
@@ -131,7 +129,7 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      *
      * @return FilterCollection
      */
-    public function offsetUnset($offset): FilterCollection
+    public function offsetUnset($offset): self
     {
         unset($this->filters[$offset]);
 

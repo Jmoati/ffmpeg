@@ -13,8 +13,6 @@ class Dimension
     protected $height;
 
     /**
-     * Dimension constructor.
-     *
      * @param int $width
      * @param int $height
      */
@@ -38,7 +36,7 @@ class Dimension
      *
      * @return Dimension
      */
-    public static function create(int $width, int $height): Dimension
+    public static function create(int $width, int $height): self
     {
         return new static($width, $height);
     }
@@ -48,7 +46,7 @@ class Dimension
      *
      * @return Dimension
      */
-    public static function createFromString(string $string): Dimension
+    public static function createFromString(string $string): self
     {
         preg_match('/([0-9]+)\s?[:xX,;]{1}\s?([0-9]+)/', $string, $matches);
 
@@ -77,7 +75,7 @@ class Dimension
      *
      * @return Dimension
      */
-    public function setHeight(int $height, int $modulo = 2): Dimension
+    public function setHeight(int $height, int $modulo = 2): self
     {
         $this->height = (int) (floor($height) - (floor($height) % $modulo));
 
@@ -90,7 +88,7 @@ class Dimension
      *
      * @return Dimension
      */
-    public function setWidth(int $width, int $modulo = 2): Dimension
+    public function setWidth(int $width, int $modulo = 2): self
     {
         $this->width = (int) (floor($width) - (floor($width) % $modulo));
 

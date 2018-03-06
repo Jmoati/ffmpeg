@@ -19,6 +19,5 @@ class TimecodeTest extends TestCase
 
         $timecode->subtract(Timecode::createFromString('00:00:02.00'));
         $this->assertEquals(5, $timecode->getSeconds());
-
     }
 }

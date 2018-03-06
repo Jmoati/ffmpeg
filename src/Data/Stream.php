@@ -7,14 +7,12 @@ namespace Jmoati\FFMpeg\Data;
 class Stream extends AbstractDataCollection
 {
     /**
-     * Stream constructor.
-     *
      * @param array $properties
      */
     public function __construct(array $properties)
     {
         if (isset($properties['tags']) && isset($properties['tags']['rotate'])) {
-            if (90 == $properties['tags']['rotate'] || -90 == $properties['tags']['rotate'] || 270 == $properties['tags']['rotate']) {
+            if (90 == $properties['tags']['rotate'] || $properties['tags']['rotate'] == -90 || 270 == $properties['tags']['rotate']) {
                 $width = $properties['width'];
                 $height = $properties['height'];
 

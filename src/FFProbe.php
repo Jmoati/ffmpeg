@@ -9,18 +9,15 @@ use Jmoati\FFMpeg\Data\Media;
 use Jmoati\FFMpeg\Data\StreamCollection;
 use Symfony\Component\Process\Process;
 
-class FFProbe implements FFInterface
+final class FFProbe implements FFInterface
 {
-    const COMMAND_STREAMS = '-show_streams';
-    const COMMAND_FORMAT = '-show_format';
-    const COMMAND_MEDIA = '-show_streams -show_format';
+    private const COMMAND_STREAMS = '-show_streams';
+    private const COMMAND_FORMAT = '-show_format';
+    private const COMMAND_MEDIA = '-show_streams -show_format';
 
     /** @var string */
-    protected $bin;
+    private $bin;
 
-    /**
-     * FFProbe constructor.
-     */
     public function __construct()
     {
         $process = new Process('which ffprobe');
@@ -38,7 +35,7 @@ class FFProbe implements FFInterface
     /**
      * @return FFProbe
      */
-    public static function create(): FFProbe
+    public static function create(): self
     {
         return new static();
     }
@@ -46,42 +43,66 @@ class FFProbe implements FFInterface
     /**
      * @param string $filename
      *
+     * @throws \Exception
+     *
      * @return Format
      */
     public function format(string $filename): Format
     {
-        return $this->probe($filename, self::COMMAND_FORMAT);
+        $format = $this->probe($filename, self::COMMAND_FORMAT);
+
+        if (!($format instanceof Format)) {
+            throw new \LogicException();
+        }
+
+        return $format;
     }
 
     /**
      * @param string $filename
+     *
+     * @throws \Exception
      *
      * @return StreamCollection
      */
     public function streams(string $filename): StreamCollection
     {
-        return $this->probe($filename, self::COMMAND_STREAMS);
+        $streamCollection = $this->probe($filename, self::COMMAND_STREAMS);
+
+        if (!($streamCollection instanceof StreamCollection)) {
+            throw new \LogicException();
+        }
+
+        return $streamCollection;
     }
 
     /**
      * @param string $filename
      *
+     * @throws \Exception
+     *
      * @return Media
      */
     public function media(string $filename): Media
     {
-        return $this->probe($filename, self::COMMAND_MEDIA);
+        $media = $this->probe($filename, self::COMMAND_MEDIA);
+
+        if (!($media instanceof Media)) {
+            throw new \LogicException();
+        }
+
+        return $media;
     }
 
     /**
-     * @param string     $command
-     * @param mixed|null $callback
+     * @param string        $command
+     * @param callable|null $callback
      *
      * @return Process
      */
-    public function run(string $command, $callback = null): Process
+    public function run(string $command, callable $callback = null): Process
     {
-        $process = new Process('nice '.$this->bin.' '.$command, null, null, null, 0);
+        $process = new Process('nice '.$this->bin.' '.$command, null, null, null, 0.0);
         $process->run($callback);
 
         return $process;
@@ -95,7 +116,7 @@ class FFProbe implements FFInterface
      *
      * @return Format|StreamCollection|Media
      */
-    protected function probe(string $filename, string $command)
+    private function probe(string $filename, string $command)
     {
         $process = $this->run(sprintf('%s -print_format json "%s"', self::COMMAND_MEDIA, $filename));
 
@@ -112,13 +133,10 @@ class FFProbe implements FFInterface
         switch ($command) {
             case self::COMMAND_STREAMS:
                 return new StreamCollection($output['streams']);
-
             case self::COMMAND_FORMAT:
                 return new Format($output['format']);
-
             case self::COMMAND_MEDIA:
                 return new Media(new FFMpeg($this), new StreamCollection($output['streams']), new Format($output['format']));
-
             default:
                 throw new \Exception('Command not found');
         }

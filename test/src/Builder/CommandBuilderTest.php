@@ -23,12 +23,16 @@ class CommandBuilderTest extends SampleTestCase
 
         $this->assertTrue('' == $builder->computeParams());
 
-
         $output = Output::create()
             ->setWidth(10000);
 
         $builder = new CommandBuilder($media, $output);
         $stream = $media->streams()->videos()->first();
+
+        if (false === $stream) {
+            throw new \LogicException();
+        }
+
         $this->assertTrue(false !== mb_strstr($builder->computeParams(), sprintf('%sx%s', $stream->get('width'), $stream->get('height'))));
     }
 }

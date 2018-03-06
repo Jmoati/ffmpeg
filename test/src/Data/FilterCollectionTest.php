@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Test\Data;
 
-use Jmoati\FFMpeg\Data\Timecode;
 use Jmoati\FFMpeg\FFMpeg;
 use Jmoati\FFMpeg\Filter\ClipFilter;
 use Jmoati\FFMpeg\Filter\FilterInterface;
-use Jmoati\FFMpeg\Test\FFAbstract;
 use Jmoati\FFMpeg\Test\SampleTestCase;
 
 class FilterCollectionTest extends SampleTestCase

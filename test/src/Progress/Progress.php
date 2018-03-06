@@ -35,14 +35,12 @@ class Progress implements ProgressInterface
     /**
      * @param string $type
      * @param string $data
-     *
-     * @return void
      */
-    public function callback(string $type, string $data): void
+    public function __invoke(string $type, string $data): void
     {
         if (preg_match('/frame=\s*([0-9]+)\s*fps=\s*([0-9]+)\s*/', $data, $matches)) {
-            $this->currentFrame = (integer) $matches[1];
-            $this->fps = (integer) $matches[2];
+            $this->currentFrame = (int) $matches[1];
+            $this->fps = (int) $matches[2];
         }
 
         $this->buffer .= $data;
@@ -55,7 +53,7 @@ class Progress implements ProgressInterface
     {
         if ($this->totalFrames > 0 && $this->currentFrame > 0 && $this->fps > 0) {
             $remainingFrames = $this->totalFrames * ($this->totalPasses - $this->currentPass) + $this->totalFrames - $this->currentFrame;
-            $this->remaining = (integer) round($remainingFrames / $this->fps);
+            $this->remaining = (int) round($remainingFrames / $this->fps);
         }
 
         return $this->remaining;
@@ -70,7 +68,7 @@ class Progress implements ProgressInterface
             $totalFrames = $this->totalFrames * $this->totalPasses;
             $currentFrame = $this->totalFrames * ($this->currentPass - 1) + $this->currentFrame;
 
-            $this->pourcent = (integer) round($currentFrame / $totalFrames * 100);
+            $this->pourcent = (int) round($currentFrame / $totalFrames * 100);
         }
 
         return $this->pourcent;
