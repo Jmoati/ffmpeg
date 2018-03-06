@@ -12,9 +12,6 @@ abstract class AbstractManipulable
     /** @var Media */
     protected $media;
 
-    /**
-     * AbstractManipulable constructor.
-     */
     public function __construct()
     {
         $this->filters = new FilterCollection($this);
@@ -33,7 +30,7 @@ abstract class AbstractManipulable
      *
      * @return AbstractManipulable
      */
-    public function setMedia(Media $media): AbstractManipulable
+    public function setMedia(Media $media): self
     {
         $this->media = $media;
 

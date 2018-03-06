@@ -24,8 +24,6 @@ class Media
     protected $fs;
 
     /**
-     * Media constructor.
-     *
      * @param FFMpeg                $ffmpeg
      * @param StreamCollection|null $streams
      * @param Format|null           $format
@@ -111,7 +109,7 @@ class Media
      *
      * @return bool
      */
-    public function save(string $filename, Output $output, ProgressInterface $callback = null, $debug = false): bool
+    public function save(string $filename, Output $output, ProgressInterface $callback = null): bool
     {
         $commandBuilder = new CommandBuilder($this, $output);
         $tmpDir = sys_get_temp_dir().'/'.sha1(uniqid()).'/';
@@ -121,7 +119,7 @@ class Media
         $passes = $output->getPasses();
 
         $this->setCallbackProperty($callback, 'totalPasses', $passes);
-        $process = 0;
+        $process = null;
 
         for ($i = 0, $l = $passes; $i < $l; ++$i) {
             if (null !== $callback) {
@@ -140,9 +138,7 @@ class Media
                     $commandBuilder->computeParams(),
                     $filename
                 ),
-                get_class($callback) == 'Closure' || null === $callback ?
-                    $callback :
-                    [$callback, 'callback']
+                $callback
             );
 
             if (0 !== $process->getExitCode()) {
@@ -151,6 +147,10 @@ class Media
         }
 
         $this->fs->remove($tmpDir);
+
+        if (null === $process) {
+            throw new \LogicException();
+        }
 
         return 0 === $process->getExitCode();
     }
@@ -162,7 +162,7 @@ class Media
      *
      * @return Media
      */
-    protected function setCallbackProperty(ProgressInterface $callback = null, string $property, int $value): Media
+    protected function setCallbackProperty(ProgressInterface $callback = null, string $property, int $value): self
     {
         if (null !== $callback && property_exists($callback, $property)) {
             $callback->$property = $value;

@@ -4,15 +4,14 @@
     "license": "GPL-3.0",
     "require": {
         "php": ">=7.1",
-        "symfony/process": "~3.0",
-        "symfony/filesystem": "~3.0"
+        "symfony/process": "^3.0|^4.0",
+        "symfony/filesystem": "^3.0|^4.0"
     },
     "require-dev": {
-        "jmoati/ffmpeg-x64-bin": "~3.0",
-        "phpunit/phpunit": "~6.0",
-        "phpstan/phpstan": "~0.7.0",
-        "friendsofphp/php-cs-fixer": "~2.3",
-        "brianium/paratest": "~1.0"
+        "jmoati/ffmpeg-x64-bin": "^3.0",
+        "phpunit/phpunit": "^7.0",
+        "phpstan/phpstan": "^0.9",
+        "friendsofphp/php-cs-fixer": "^2.3"
     },
     "authors": [
         {

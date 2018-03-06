@@ -1,20 +1,9 @@
-image: dockenizer/test
+image: jmoati/client
 
-cache:
-  paths:
-  - vendor/
+stages:
+  - test
 
-before_script:
-- composer install
-
-phpunit:
+test:
+  stage: test
   script:
-  - vendor/bin/phpunit --coverage-text --colors=never
-  
-phpstan:
-  script:
-  - vendor/bin/phpstan analyse --level=4 src test
-
-php-cs-fixer:
-  script:
-  - vendor/bin/php-cs-fixer fix --dry-run -v
+  - make check

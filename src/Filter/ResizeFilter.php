@@ -6,7 +6,7 @@ namespace Jmoati\FFMpeg\Filter;
 
 use Jmoati\FFMpeg\Data\Dimension;
 
-class ResizeFilter extends FilterAbstract implements FormatFilterInterface, FrameFilterInterface
+final class ResizeFilter extends FilterAbstract implements FormatFilterInterface, FrameFilterInterface
 {
     public const MODE_FORCE = 0;
     public const MODE_INSET = 1;
@@ -14,10 +14,10 @@ class ResizeFilter extends FilterAbstract implements FormatFilterInterface, Fram
     public const MODE_MAX_HEIGHT = 4;
 
     /** @var Dimension */
-    protected $dimension;
+    private $dimension;
 
     /** @var int */
-    protected $mode;
+    private $mode;
 
     /**
      * @param Dimension $dimension
@@ -38,17 +38,22 @@ class ResizeFilter extends FilterAbstract implements FormatFilterInterface, Fram
     }
 
     /**
-     * @return Dimension
+     * @return Dimension|null
      */
-    protected function compute(): Dimension
+    protected function compute(): ?Dimension
     {
         $source = $this->media()->streams()->videos()->first();
+
+        if (false === $source) {
+            return null;
+        }
+
         $sourceDimension = new Dimension((int) $source->get('width'), (int) $source->get('height'));
 
         if (self::MODE_MAX_HEIGHT == $this->mode || (self::MODE_INSET == $this->mode && $this->dimension->getRatio() > $sourceDimension->getRatio())) {
             $this->dimension->setWidth($this->dimension->getHeight() * $sourceDimension->getRatio());
         } elseif (self::MODE_MAX_WIDTH == $this->mode || self::MODE_INSET == $this->mode) {
-            $this->dimension->setHeight($this->dimension->getWidth() / $sourceDimension->getRatio());
+            $this->dimension->setHeight((int) ($this->dimension->getWidth() / $sourceDimension->getRatio()));
         }
 
         foreach ($this->parent() as $filter) {

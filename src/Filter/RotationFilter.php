@@ -4,22 +4,24 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Filter;
 
-class RotationFilter extends FilterAbstract implements FormatFilterInterface, FrameFilterInterface
+final class RotationFilter extends FilterAbstract implements FormatFilterInterface, FrameFilterInterface
 {
-    const ROTATION_90 = 'transpose=1';
-    const ROTATION_180 = 'transpose=1, transpose=1';
-    const ROTATION_270 = 'transpose=2';
+    public const ROTATION_90 = 'transpose=1';
+    public const ROTATION_180 = 'transpose=1, transpose=1';
+    public const ROTATION_270 = 'transpose=2';
 
     /** @var string */
-    protected $rotation;
+    protected $rotation = '';
 
     /**
-     * RotationFilter constructor.
-     *
      * @param string $rotation
      */
     public function __construct(string $rotation)
     {
+        if (!in_array($rotation, [self::ROTATION_90, self::ROTATION_180, self::ROTATION_270], true)) {
+            throw new \LogicException();
+        }
+
         $this->rotation = $rotation;
     }
 

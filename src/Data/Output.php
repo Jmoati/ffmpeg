@@ -39,22 +39,18 @@ class Output
     /** @var int|null */
     protected $height;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $maps = [];
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $upscale = false;
 
     /**
-     * @param $audioCodec
+     * @param string $audioCodec
      *
      * @return Output
      */
-    public function setAudioCodec($audioCodec): Output
+    public function setAudioCodec(string $audioCodec): self
     {
         $this->audioCodec = $audioCodec;
 
@@ -74,7 +70,7 @@ class Output
      *
      * @return Output
      */
-    public function setAudioKiloBitrate(int $audioKiloBitrate): Output
+    public function setAudioKiloBitrate(int $audioKiloBitrate): self
     {
         $this->audioKiloBitrate = $audioKiloBitrate;
 
@@ -94,7 +90,7 @@ class Output
      *
      * @return Output
      */
-    public function setExtraParams(array $extraParams): Output
+    public function setExtraParams(array $extraParams): self
     {
         $this->extraParams = $extraParams;
 
@@ -107,7 +103,7 @@ class Output
      *
      * @return Output
      */
-    public function addExtraParam(string $param, $value = null): Output
+    public function addExtraParam(string $param, $value = null): self
     {
         $this->extraParams[$param] = $value;
 
@@ -127,7 +123,7 @@ class Output
      *
      * @return Output
      */
-    public function setFormat(string $format): Output
+    public function setFormat(string $format): self
     {
         $this->format = $format;
 
@@ -147,7 +143,7 @@ class Output
      *
      * @return Output
      */
-    public function setPasses(int $passes): Output
+    public function setPasses(int $passes): self
     {
         $this->passes = $passes;
 
@@ -167,7 +163,7 @@ class Output
      *
      * @return Output
      */
-    public function setWidth(int $width): Output
+    public function setWidth(int $width): self
     {
         $this->width = $width - ($width % 2);
 
@@ -179,7 +175,7 @@ class Output
      *
      * @return Output
      */
-    public function setHeight(int $height): Output
+    public function setHeight(int $height): self
     {
         $this->height = $height - ($height % 2);
 
@@ -207,7 +203,7 @@ class Output
      *
      * @return Output
      */
-    public function setSize(string $size): Output
+    public function setSize(string $size): self
     {
         $size = explode('x', $size);
 
@@ -227,7 +223,7 @@ class Output
      *
      * @return Output
      */
-    public function setUpscale(bool $upscale): Output
+    public function setUpscale(bool $upscale): self
     {
         $this->upscale = $upscale;
 
@@ -247,7 +243,7 @@ class Output
      *
      * @return Output
      */
-    public function setVideoCodec(string $videoCodec): Output
+    public function setVideoCodec(string $videoCodec): self
     {
         $this->videoCodec = $videoCodec;
 
@@ -267,7 +263,7 @@ class Output
      *
      * @return Output
      */
-    public function setAudioRate(string $audioRate): Output
+    public function setAudioRate(string $audioRate): self
     {
         $this->audioRate = $audioRate;
 
@@ -287,7 +283,7 @@ class Output
      *
      * @return Output
      */
-    public function setFrameRate(int $frameRate): Output
+    public function setFrameRate(int $frameRate): self
     {
         $this->frameRate = $frameRate;
 
@@ -307,7 +303,7 @@ class Output
      *
      * @return Output
      */
-    public function setVideoKiloBitrate(int $videoKiloBitrate): Output
+    public function setVideoKiloBitrate(int $videoKiloBitrate): self
     {
         $this->videoKiloBitrate = $videoKiloBitrate;
 
@@ -325,7 +321,7 @@ class Output
     /**
      * @return Output
      */
-    public static function create(): Output
+    public static function create(): self
     {
         return new static();
     }
@@ -333,7 +329,7 @@ class Output
     /**
      * @return Output
      */
-    public function clearMaps(): Output
+    public function clearMaps(): self
     {
         $this->maps = [];
 
@@ -345,7 +341,7 @@ class Output
      *
      * @return Output
      */
-    public function addMap(string $map): Output
+    public function addMap(string $map): self
     {
         $this->maps[] = $map;
 
@@ -361,7 +357,7 @@ class Output
     }
 
     /**
-     * @return string[]
+     * @return array
      */
     public function getParams(): array
     {
@@ -388,7 +384,7 @@ class Output
      *
      * @return Output
      */
-    protected function setParam(array &$params, string $key, string $getter, string $suffix = ''): Output
+    protected function setParam(array &$params, string $key, string $getter, string $suffix = ''): self
     {
         if (null !== $this->$getter()) {
             if (is_array($this->$getter())) {

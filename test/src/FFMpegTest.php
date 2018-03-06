@@ -20,7 +20,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class FFMpegTest extends SampleTestCase
 {
-
     public function setUp()
     {
         $this->tearDown();
@@ -31,6 +30,7 @@ class FFMpegTest extends SampleTestCase
         (new Filesystem())->remove($this->filenameDestination);
         (new Filesystem())->remove($this->filenameFrameDestination);
     }
+
     public function testOpenFile()
     {
         $media = FFMpeg::openFile($this->filenameVideo);
@@ -46,11 +46,18 @@ class FFMpegTest extends SampleTestCase
         $this->assertTrue($media->format() instanceof Format);
 
         $this->assertEquals(2, $streams->count());
-        $this->assertTrue($streams->audios()->first()->isAudio());
-        $this->assertTrue($streams->videos()->first()->isVideo());
 
-        $this->assertFalse($streams->audios()->first()->isData());
-        $this->assertFalse($streams->audios()->first()->isImage());
+        $audio = $streams->audios()->first();
+        $video = $streams->videos()->first();
+
+        if (false === $audio || false === $video) {
+            throw new \LogicException();
+        }
+
+        $this->assertTrue($audio->isAudio());
+        $this->assertTrue($video->isVideo());
+        $this->assertFalse($audio->isData());
+        $this->assertFalse($audio->isImage());
     }
 
     public function testCreateFile()
@@ -81,9 +88,16 @@ class FFMpegTest extends SampleTestCase
         $this->assertTrue($new instanceof Media);
         $this->assertEquals(0, $new->streams()->count());
 
+        $videoStream = $video->streams()->videos()->first();
+        $audioStream = $audio->streams()->audios()->first();
+
+        if (false === $videoStream || false === $audioStream) {
+            throw new \LogicException();
+        }
+
         $new->streams()
-                ->add($video->streams()->videos()->first())
-                ->add($audio->streams()->audios()->first());
+                ->add($videoStream)
+                ->add($audioStream);
 
         $this->assertEquals(2, $new->streams()->count());
 
@@ -126,9 +140,15 @@ class FFMpegTest extends SampleTestCase
         $video->format()->filters()->add($rotationFilter);
         $video->format()->filters()->add($resizeFilter);
 
+        $videoStream = $video->streams()->videos()->first();
+
+        if (false === $videoStream) {
+            throw new \LogicException();
+        }
+
         $output = Output::create()
             ->setVideoKiloBitrate(1200)
-            ->setHeight((int)($video->streams()->videos()->first()->get('height') * 2))
+            ->setHeight((int) ($videoStream->get('height') * 2))
             ->setUpscale(true)
             ->setVideoCodec('h264');
 
@@ -146,7 +166,7 @@ class FFMpegTest extends SampleTestCase
         $result = $video->save($this->filenameDestination, $output);
 
         if (false === $result) {
-            $result = $video->save($this->filenameDestination, $output, null, true);
+            $result = $video->save($this->filenameDestination, $output, null);
         }
 
         $this->assertTrue(file_exists($this->filenameDestination));

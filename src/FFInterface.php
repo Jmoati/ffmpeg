@@ -9,10 +9,10 @@ use Symfony\Component\Process\Process;
 interface FFInterface
 {
     /**
-     * @param string     $command
-     * @param mixed|null $callback
+     * @param string        $command
+     * @param callable|null $callback
      *
      * @return Process
      */
-    public function run(string $command, $callback = null): Process;
+    public function run(string $command, callable $callback = null): Process;
 }

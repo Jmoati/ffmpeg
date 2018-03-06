@@ -28,8 +28,16 @@ class FFProbeTest extends SampleTestCase
 
         $this->assertTrue($streams instanceof StreamCollection);
         $this->assertEquals(2, $streams->count());
-        $this->assertTrue($streams->audios()->first()->isAudio());
-        $this->assertTrue($streams->videos()->first()->isVideo());
+
+        $audio = $streams->audios()->first();
+        $video = $streams->videos()->first();
+
+        if (false === $audio || false === $video) {
+            throw new \LogicException();
+        }
+
+        $this->assertTrue($audio->isAudio());
+        $this->assertTrue($video->isVideo());
 
         $this->assertEquals(2, count($streams->all()));
         $this->assertEquals(0, count($streams->data()));

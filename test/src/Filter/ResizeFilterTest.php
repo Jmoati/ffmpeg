@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace Jmoati\FFMpeg\Test\Filter;
 
 use Jmoati\FFMpeg\Data\Dimension;
@@ -20,6 +23,11 @@ class ResizeFilterTest extends SampleTestCase
 
         $this->expectException(\LogicException::class);
         $stream = $image->streams()->videos()->first();
+
+        if (false === $stream) {
+            throw new \LogicException();
+        }
+
         $stream->filters()->add($resizeFilter);
     }
 }

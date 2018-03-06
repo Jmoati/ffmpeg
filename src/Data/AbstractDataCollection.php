@@ -7,7 +7,7 @@ namespace Jmoati\FFMpeg\Data;
 abstract class AbstractDataCollection extends AbstractManipulable implements \Countable
 {
     /** @var array */
-    protected $properties;
+    protected $properties = [];
 
     /**
      * @param array $properties
