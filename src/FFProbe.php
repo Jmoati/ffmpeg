@@ -20,15 +20,19 @@ final class FFProbe implements FFInterface
 
     public function __construct()
     {
-        $process = new Process('which ffprobe');
-        $process->run();
-
-        if (0 === $process->getExitCode()) {
-            $this->bin = 'ffprobe';
-        } elseif (file_exists(__DIR__.'/../vendor/bin/ffprobe')) {
+        if (file_exists(__DIR__.'/../vendor/bin/ffprobe')) {
             $this->bin = realpath(__DIR__.'/../vendor/bin/ffprobe');
-        } else {
+        } elseif (file_exists(__DIR__.'/../../../bin/ffprobe')) {
             $this->bin = realpath(__DIR__.'/../../../bin/ffprobe');
+        } else {
+            $process = new Process('which ffprobe');
+            $process->run();
+
+            if ($process->getExitCode() < 1) {
+                $this->bin = 'ffprobe';
+            } else {
+                throw new \Exception('No ffprobe binary found');
+            }
         }
     }
 
@@ -119,8 +123,8 @@ final class FFProbe implements FFInterface
     private function probe(string $filename, string $command)
     {
         $process = $this->run(sprintf('%s -print_format json "%s"', self::COMMAND_MEDIA, $filename));
-
-        if (0 !== $process->run()) {
+        
+        if ($process->run() > 1) {
             throw new \Exception('File can\'t be probe.');
         }
 

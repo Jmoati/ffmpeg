@@ -22,15 +22,19 @@ final class FFMpeg implements FFInterface
     {
         $this->ffprobe = $ffprobe;
 
-        $process = new Process('which ffmpeg');
-        $process->run();
-
-        if (0 === $process->getExitCode()) {
-            $this->bin = 'ffmpeg';
-        } elseif (file_exists(__DIR__.'/../vendor/bin/ffmpeg')) {
+        if (file_exists(__DIR__.'/../vendor/bin/ffmpeg')) {
             $this->bin = realpath(__DIR__.'/../vendor/bin/ffmpeg');
-        } else {
+        } elseif (file_exists('__DIR__.\'/../../../bin/ffmpeg')) {
             $this->bin = realpath(__DIR__.'/../../../bin/ffmpeg');
+        } else {
+            $process = new Process('which ffmpeg');
+            $process->run();
+
+            if ($process->getExitCode() < 1) {
+                $this->bin = 'ffmpeg';
+            } else {
+                throw new \Exception('no ffmpeg binary found');
+            }
         }
     }
 
