@@ -49,6 +49,6 @@ class Frame extends AbstractManipulable
 
         $process = $this->media->ffmpeg()->run($command);
 
-        return 0 === $process->getExitCode();
+        return $process->getExitCode() < 1;
     }
 }

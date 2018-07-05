@@ -96,10 +96,10 @@ class Dimension
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getRatio(): int
+    public function getRatio(): float
     {
-        return (int) ($this->width / $this->height);
+        return $this->width / $this->height;
     }
 }

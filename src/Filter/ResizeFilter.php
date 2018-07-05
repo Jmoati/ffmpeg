@@ -50,10 +50,10 @@ final class ResizeFilter extends FilterAbstract implements FormatFilterInterface
 
         $sourceDimension = new Dimension((int) $source->get('width'), (int) $source->get('height'));
 
-        if (self::MODE_MAX_HEIGHT == $this->mode || (self::MODE_INSET == $this->mode && $this->dimension->getRatio() > $sourceDimension->getRatio())) {
-            $this->dimension->setWidth($this->dimension->getHeight() * $sourceDimension->getRatio());
-        } elseif (self::MODE_MAX_WIDTH == $this->mode || self::MODE_INSET == $this->mode) {
-            $this->dimension->setHeight((int) ($this->dimension->getWidth() / $sourceDimension->getRatio()));
+        if (self::MODE_MAX_HEIGHT === $this->mode || (self::MODE_INSET === $this->mode && $this->dimension->getRatio() > $sourceDimension->getRatio())) {
+            $this->dimension->setWidth((int) floor($this->dimension->getHeight() * $sourceDimension->getRatio()));
+        } elseif (self::MODE_MAX_WIDTH === $this->mode || self::MODE_INSET === $this->mode) {
+            $this->dimension->setHeight((int) floor($this->dimension->getWidth() / $sourceDimension->getRatio()));
         }
 
         foreach ($this->parent() as $filter) {

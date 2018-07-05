@@ -19,7 +19,7 @@ class ResizeFilterTest extends SampleTestCase
         $image = FFMpeg::openFile($this->filenameImage);
         $image->format()->filters()->add($resizeFilter);
 
-        $this->assertEquals('-s 480x480', (string) $image->format()->filters()->offsetGet(0));
+        $this->assertEquals('-s 640x480', (string) $image->format()->filters()->offsetGet(0));
 
         $this->expectException(\LogicException::class);
         $stream = $image->streams()->videos()->first();
