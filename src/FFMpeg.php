@@ -24,7 +24,7 @@ final class FFMpeg implements FFInterface
 
         if (file_exists(__DIR__.'/../vendor/bin/ffmpeg')) {
             $this->bin = realpath(__DIR__.'/../vendor/bin/ffmpeg');
-        } elseif (file_exists('__DIR__.\'/../../../bin/ffmpeg')) {
+        } elseif (file_exists(__DIR__.'/../../../bin/ffmpeg')) {
             $this->bin = realpath(__DIR__.'/../../../bin/ffmpeg');
         } else {
             $process = new Process('which ffmpeg');
