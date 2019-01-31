@@ -3,15 +3,17 @@
     "description": "A ffmpeg wrapper",
     "license": "GPL-3.0",
     "require": {
-        "php": ">=7.1",
-        "symfony/process": "^3.0|^4.0",
-        "symfony/filesystem": "^3.0|^4.0"
+
+        "php": ">=7.2",
+        "symfony/process": "^4.2",
+        "symfony/filesystem": "^4.2"
     },
     "require-dev": {
-        "jmoati/ffmpeg-x64-bin": "^3.0",
-        "phpunit/phpunit": "^7.0",
-        "phpstan/phpstan": "^0.9",
-        "friendsofphp/php-cs-fixer": "^2.3"
+        "jmoati/ffmpeg-x64-bin": "^4.0",
+        "phpunit/phpunit": "^7.5",
+        "phpstan/phpstan": "^0.11",
+        "friendsofphp/php-cs-fixer": "^2.3",
+        "brianium/paratest": "2.2"
     },
     "authors": [
         {

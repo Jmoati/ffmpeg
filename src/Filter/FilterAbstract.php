@@ -12,13 +12,6 @@ class FilterAbstract
     /** @var FilterCollection */
     protected $parent;
 
-    /**
-     * @param FilterCollection $parent
-     *
-     * @throws \LogicException
-     *
-     * @return FilterAbstract
-     */
     public function setParent(FilterCollection $parent): self
     {
         $this->checkFilterType($parent, 'Stream', 'StreamFilterInterface');
@@ -30,31 +23,16 @@ class FilterAbstract
         return $this;
     }
 
-    /**
-     * @return FilterCollection
-     */
     public function parent(): FilterCollection
     {
         return $this->parent;
     }
 
-    /**
-     * @return Media
-     */
-    public function media(): Media
+    public function media(): ?Media
     {
         return $this->parent()->parent()->media();
     }
 
-    /**
-     * @param FilterCollection $parent
-     * @param string           $className
-     * @param string           $interface
-     *
-     * @throws \LogicException
-     *
-     * @return bool
-     */
     protected function checkFilterType(FilterCollection $parent, string $className, string $interface): bool
     {
         if (basename(str_replace('\\', '/', get_class($parent->parent()))) != $className) {

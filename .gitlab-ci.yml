@@ -1,9 +1,0 @@
-image: jmoati/client
-
-stages:
-  - test
-
-test:
-  stage: test
-  script:
-  - make check

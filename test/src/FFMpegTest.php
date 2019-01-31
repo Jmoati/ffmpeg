@@ -112,15 +112,16 @@ class FFMpegTest extends SampleTestCase
         $commandBuilder = new CommandBuilder($new, $output);
 
         $inputs = $commandBuilder->computeInputs();
-        $this->assertTrue(is_numeric(mb_strpos($inputs, sprintf('-i "%s"', $this->filenameAudio))));
-        $this->assertTrue(is_numeric(mb_strpos($inputs, sprintf('-i "%s"', $this->filenameVideoRotate))));
+
+        $this->assertTrue(is_numeric(mb_strpos(implode(' ', $inputs), sprintf('-i %s', $this->filenameAudio))));
+        $this->assertTrue(is_numeric(mb_strpos(implode(' ', $inputs), sprintf('-i %s', $this->filenameVideoRotate))));
 
         $filters = $commandBuilder->computeFormatFilters();
-        $this->assertTrue(is_numeric(mb_strpos($filters, sprintf('-t %s', Timecode::createFromSeconds(1)))));
+        $this->assertTrue(is_numeric(mb_strpos(implode(' ', $filters), sprintf('-t %s', Timecode::createFromSeconds(1)))));
 
         $result = $new->save($this->filenameDestination, $output);
-        $this->assertTrue(file_exists($this->filenameDestination));
         $this->assertTrue($result);
+        $this->assertTrue(file_exists($this->filenameDestination));
 
         $check = FFMpeg::openFile($this->filenameDestination);
 
@@ -155,13 +156,13 @@ class FFMpegTest extends SampleTestCase
         $commandBuilder = new CommandBuilder($video, $output);
 
         $inputs = $commandBuilder->computeInputs();
-        $this->assertTrue(is_numeric(mb_strpos($inputs, sprintf('-i "%s"', $this->filenameVideo))));
+        $this->assertTrue(is_numeric(mb_strpos(implode(' ', $inputs), sprintf('-i %s', $this->filenameVideo))));
 
         $filters = $commandBuilder->computeFormatFilters();
 
-        $this->assertTrue(is_numeric(mb_strpos($filters, sprintf('-ss %s', Timecode::createFromSeconds(5)))));
-        $this->assertTrue(is_numeric(mb_strpos($filters, sprintf('-t %s', Timecode::createFromSeconds(1)))));
-        $this->assertTrue(is_numeric(mb_strpos($filters, 'transpose=1')));
+        $this->assertTrue(is_numeric(mb_strpos(implode(' ', $filters), sprintf('-ss %s', Timecode::createFromSeconds(5)))));
+        $this->assertTrue(is_numeric(mb_strpos(implode(' ', $filters), sprintf('-t %s', Timecode::createFromSeconds(1)))));
+        $this->assertTrue(is_numeric(mb_strpos(implode(' ', $filters), 'transpose=1')));
 
         $result = $video->save($this->filenameDestination, $output);
 

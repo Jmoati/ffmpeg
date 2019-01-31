@@ -24,11 +24,6 @@ class CommandBuilder
     /** @var bool */
     protected $dryRun;
 
-    /**
-     * @param Media       $media
-     * @param Output|null $output
-     * @param bool        $dryRun
-     */
     public function __construct(Media $media, Output $output = null, bool $dryRun = false)
     {
         $this->media = $media;
@@ -36,63 +31,46 @@ class CommandBuilder
         $this->dryRun = $dryRun;
     }
 
-    /**
-     * @return string
-     */
-    public function computeInputs(): string
+    public function computeInputs(): array
     {
         $result = [];
 
         foreach ($this->media->streams() as $stream) {
-            $result[] = (string) $stream->filters();
+            $result = array_merge($result, $stream->filters()->__toArray());
 
             if ('image2' == $stream->media()->format()->get('format_name')) {
-                $result[] = '-loop 1';
+                $result[] = '-loop';
+                $result[] = 1;
             }
 
-            $result[] = sprintf('-i "%s"', $stream->get('media_filename'));
+            $result[] = '-i';
+            $result[] = $stream->get('media_filename');
         }
 
         if (!(null !== $this->output && isset($this->output->getParams()['maps']))) {
             foreach ($this->media->streams() as $index => $stream) {
-                $result[] = sprintf('-map %s:%s', $index, $stream->get('index'));
+                $result[] = '-map';
+                $result[] = $index.':'.$stream->get('index');
             }
         }
 
-        return implode(' ', $result);
+        return $result;
     }
 
-    /**
-     * @param int    $i
-     * @param int    $total
-     * @param string $tmpDir
-     *
-     * @return string
-     */
-    public function computePasses(int $i, int $total, string $tmpDir): string
+    public function computePasses(int $i, int $total, string $tmpDir): array
     {
-        return 1 === $total ? '' : sprintf(
-            '-pass %d -passlogfile %s',
-            $i + 1,
-            $tmpDir
-        );
+        return 1 === $total ? [] : ['-pass', $i + 1, '-passlogfile', $tmpDir];
     }
 
-    /**
-     * @return string
-     */
-    public function computeFormatFilters(): string
+    public function computeFormatFilters(): array
     {
-        return (string) $this->media->format()->filters();
+        return $this->media->format()->filters()->__toArray();
     }
 
-    /**
-     * @return string
-     */
-    public function computeParams(): string
+    public function computeParams(): array
     {
         if (null === $this->output) {
-            return '';
+            return [];
         }
 
         if (false !== $this->media->streams()->videos()->first() && (null !== $this->output->getWidth() || null !== $this->output->getHeight())) {
@@ -134,13 +112,15 @@ class CommandBuilder
         foreach ($params as $param => $value) {
             if ('maps' == $param && is_array($value)) {
                 foreach ($value as $map) {
-                    $result[] = "-map '$map'";
+                    $result[] = '-map';
+                    $result[] = $map;
                 }
             } else {
-                $result[] = "-$param $value";
+                $result[] = "-$param";
+                $result[] = $value;
             }
         }
 
-        return implode(' ', $result);
+        return $result;
     }
 }

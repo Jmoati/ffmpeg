@@ -11,9 +11,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /** @var Stream[] */
     protected $streams = [];
 
-    /**
-     * @param array $streams
-     */
     public function __construct(array $streams = [])
     {
         foreach ($streams as $stream) {
@@ -33,11 +30,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         return reset($this->streams);
     }
 
-    /**
-     * @param Stream $stream
-     *
-     * @return StreamCollection
-     */
     public function add(Stream $stream): self
     {
         $newStream = clone $stream;
@@ -46,11 +38,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         return $this;
     }
 
-    /**
-     * @param Stream $stream
-     *
-     * @return StreamCollection
-     */
     public function remove(Stream $stream): self
     {
         for ($i = 0, $l = count($this->streams); $i < $l; ++$i) {
@@ -63,9 +50,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         return $this;
     }
 
-    /**
-     * @return StreamCollection
-     */
     public function videos(): self
     {
         return new static(array_filter(
@@ -76,9 +60,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         ));
     }
 
-    /**
-     * @return StreamCollection
-     */
     public function audios(): self
     {
         return new static(array_filter(
@@ -89,9 +70,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         ));
     }
 
-    /**
-     * @return StreamCollection
-     */
     public function data(): self
     {
         return new static(array_filter(
@@ -102,9 +80,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         ));
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return count($this->streams);
@@ -118,9 +93,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         return $this->streams;
     }
 
-    /**
-     * @return ArrayIterator
-     */
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->streams);
@@ -171,11 +143,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         return $this;
     }
 
-    /**
-     * @param Media $media
-     *
-     * @return StreamCollection
-     */
     public function setMedia(Media $media): self
     {
         foreach ($this->streams as $stream) {

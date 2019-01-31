@@ -21,11 +21,11 @@ final class FFProbe implements FFInterface
     public function __construct()
     {
         if (file_exists(__DIR__.'/../vendor/bin/ffprobe')) {
-            $this->bin = realpath(__DIR__.'/../vendor/bin/ffprobe');
+            $this->bin = (string) realpath(__DIR__.'/../vendor/bin/ffprobe');
         } elseif (file_exists(__DIR__.'/../../../bin/ffprobe')) {
-            $this->bin = realpath(__DIR__.'/../../../bin/ffprobe');
+            $this->bin = (string) realpath(__DIR__.'/../../../bin/ffprobe');
         } else {
-            $process = new Process('which ffprobe');
+            $process = new Process(['which', 'ffprobe']);
             $process->run();
 
             if ($process->getExitCode() < 1) {
@@ -36,77 +36,38 @@ final class FFProbe implements FFInterface
         }
     }
 
-    /**
-     * @return FFProbe
-     */
     public static function create(): self
     {
         return new static();
     }
 
-    /**
-     * @param string $filename
-     *
-     * @throws \Exception
-     *
-     * @return Format
-     */
     public function format(string $filename): Format
     {
         $format = $this->probe($filename, self::COMMAND_FORMAT);
-
-        if (!($format instanceof Format)) {
-            throw new \LogicException();
-        }
+        assert($format instanceof Format);
 
         return $format;
     }
 
-    /**
-     * @param string $filename
-     *
-     * @throws \Exception
-     *
-     * @return StreamCollection
-     */
     public function streams(string $filename): StreamCollection
     {
         $streamCollection = $this->probe($filename, self::COMMAND_STREAMS);
-
-        if (!($streamCollection instanceof StreamCollection)) {
-            throw new \LogicException();
-        }
+        assert($streamCollection instanceof StreamCollection);
 
         return $streamCollection;
     }
 
-    /**
-     * @param string $filename
-     *
-     * @throws \Exception
-     *
-     * @return Media
-     */
     public function media(string $filename): Media
     {
         $media = $this->probe($filename, self::COMMAND_MEDIA);
-
-        if (!($media instanceof Media)) {
-            throw new \LogicException();
-        }
+        assert($media instanceof Media);
 
         return $media;
     }
 
-    /**
-     * @param string        $command
-     * @param callable|null $callback
-     *
-     * @return Process
-     */
-    public function run(string $command, callable $callback = null): Process
+    public function run(array $command, callable  $callback = null): Process
     {
-        $process = new Process('nice '.$this->bin.' '.$command, null, null, null, 0.0);
+        $process = new Process(array_merge([$this->bin], $command), null, null, null, 0.0);
         $process->run($callback);
 
         return $process;
@@ -122,13 +83,14 @@ final class FFProbe implements FFInterface
      */
     private function probe(string $filename, string $command)
     {
-        $process = $this->run(sprintf('%s -print_format json "%s"', self::COMMAND_MEDIA, $filename));
-        
+        $process = $this->run(array_merge(explode(' ', self::COMMAND_MEDIA), ['-print_format', 'json', $filename]));
+
         if ($process->run() > 1) {
             throw new \Exception('File can\'t be probe.');
         }
 
         $output = json_decode(utf8_encode($process->getOutput()), true);
+
         foreach ($output['streams'] as &$stream) {
             $stream['media_filename'] = $output['format']['filename'];
         }

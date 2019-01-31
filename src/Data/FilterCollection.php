@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
+use ArrayIterator;
 use Jmoati\FFMpeg\Filter\FilterInterface;
 
 class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
@@ -14,40 +15,27 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /** @var AbstractManipulable */
     protected $parent;
 
-    /**
-     * @param AbstractManipulable $parent
-     */
     public function __construct(AbstractManipulable $parent)
     {
         $this->parent = $parent;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString(): string
+    public function __toArray(): array
     {
-        $result = [];
+        $filters = [];
+
         foreach ($this->filters as $filter) {
-            $result[] = (string) $filter;
+            $filters = array_merge($filters, $filter->__toArray());
         }
 
-        return implode(' ', $result);
+        return $filters;
     }
 
-    /**
-     * @return AbstractManipulable
-     */
     public function parent(): AbstractManipulable
     {
         return $this->parent;
     }
 
-    /**
-     * @param FilterInterface $filter
-     *
-     * @return FilterCollection
-     */
     public function add(FilterInterface $filter): self
     {
         $newFilter = clone $filter;
@@ -57,9 +45,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         return $this;
     }
 
-    /**
-     * @return FilterCollection
-     */
     public function clear(): self
     {
         $this->filters = [];
@@ -67,28 +52,19 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return count($this->filters);
     }
 
-    /**
-     * @return FilterInterface[]
-     */
     public function all(): array
     {
         return $this->filters;
     }
 
-    /**
-     * @return \ArrayIterator
-     */
-    public function getIterator(): \ArrayIterator
+    public function getIterator(): ArrayIterator
     {
-        return new \ArrayIterator($this->filters);
+        return new ArrayIterator($this->filters);
     }
 
     /**

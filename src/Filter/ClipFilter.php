@@ -9,14 +9,14 @@ use Jmoati\FFMpeg\Data\Timecode;
 final class ClipFilter extends FilterAbstract implements FormatFilterInterface, StreamFilterInterface
 {
     /** @var Timecode|null */
-    private $start;
+    protected $start;
 
     /** @var Timecode|null */
-    private $duration;
+    protected $duration;
 
     /**
-     * @param null|Timecode $duration
-     * @param null|Timecode $start
+     * @param Timecode|null $duration
+     * @param Timecode|null $start
      */
     public function __construct(Timecode $duration = null, Timecode $start = null)
     {
@@ -24,21 +24,20 @@ final class ClipFilter extends FilterAbstract implements FormatFilterInterface, 
         $this->duration = $duration;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString(): string
+    public function __toArray(): array
     {
         $result = [];
 
         if (null !== $this->start) {
-            $result[] = sprintf('-ss %s', $this->start);
+            $result[] = '-ss';
+            $result[] = (string) $this->start;
         }
 
         if (null !== $this->duration) {
-            $result[] = sprintf('-t %s', $this->duration);
+            $result[] = '-t';
+            $result[] = (string) $this->duration;
         }
 
-        return implode(' ', $result);
+        return $result;
     }
 }

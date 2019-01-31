@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jmoati\FFMpeg\Filter;
 
 use Jmoati\FFMpeg\Data\Dimension;
+use LogicException;
 
 final class ResizeFilter extends FilterAbstract implements FormatFilterInterface, FrameFilterInterface
 {
@@ -19,29 +20,27 @@ final class ResizeFilter extends FilterAbstract implements FormatFilterInterface
     /** @var int */
     private $mode;
 
-    /**
-     * @param Dimension $dimension
-     * @param int       $mode
-     */
     public function __construct(Dimension $dimension, int $mode = self::MODE_INSET)
     {
+        if (!in_array($mode, [self::MODE_FORCE, self::MODE_INSET, self::MODE_MAX_HEIGHT, self::MODE_MAX_WIDTH], true)) {
+            throw new LogicException('$mode must be MODE_X constant');
+        }
+
         $this->dimension = $dimension;
         $this->mode = $mode;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString(): string
+    public function __toArray(): array
     {
-        return sprintf('-s %s', (string) $this->compute());
+        return ['-s', (string) $this->compute()];
     }
 
-    /**
-     * @return Dimension|null
-     */
     protected function compute(): ?Dimension
     {
+        if (null === $this->media()) {
+            return null;
+        }
+
         $source = $this->media()->streams()->videos()->first();
 
         if (false === $source) {

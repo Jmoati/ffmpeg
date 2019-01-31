@@ -18,10 +18,10 @@ class CommandBuilderTest extends SampleTestCase
         $builder = new CommandBuilder($media);
         $computedInputs = $builder->computeInputs();
 
-        $this->assertTrue(false !== mb_strstr($computedInputs, '-loop 1'));
-        $this->assertTrue(false !== mb_strstr($computedInputs, '-map 0:0'));
+        $this->assertTrue(false !== mb_strstr(implode(' ', $computedInputs), '-loop 1'));
+        $this->assertTrue(false !== mb_strstr(implode(' ', $computedInputs), '-map 0:0'));
 
-        $this->assertTrue('' == $builder->computeParams());
+        $this->assertTrue('' === implode(' ', $builder->computeParams()));
 
         $output = Output::create()
             ->setWidth(10000);
@@ -33,6 +33,6 @@ class CommandBuilderTest extends SampleTestCase
             throw new \LogicException();
         }
 
-        $this->assertTrue(false !== mb_strstr($builder->computeParams(), sprintf('%sx%s', $stream->get('width'), $stream->get('height'))));
+        $this->assertTrue(false !== mb_strstr(implode(' ', $builder->computeParams()), sprintf('%sx%s', $stream->get('width'), $stream->get('height'))));
     }
 }

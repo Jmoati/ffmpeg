@@ -11,31 +11,22 @@ final class RotationFilter extends FilterAbstract implements FormatFilterInterfa
     public const ROTATION_270 = 'transpose=2';
 
     /** @var string */
-    protected $rotation = '';
+    private $rotation = '';
 
-    /**
-     * @param string $rotation
-     */
     public function __construct(string $rotation)
     {
         if (!in_array($rotation, [self::ROTATION_90, self::ROTATION_180, self::ROTATION_270], true)) {
-            throw new \LogicException();
+            throw new \LogicException(sprintf('$rotation must be an ROTATION_X constant'));
         }
 
         $this->rotation = $rotation;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString(): string
+    public function __toArray(): array
     {
-        return sprintf('-vf "%s"', $this->rotation);
+        return ['-vf', $this->rotation];
     }
 
-    /**
-     * @return string
-     */
     public function getRotation(): string
     {
         return $this->rotation;

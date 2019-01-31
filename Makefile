@@ -1,4 +1,4 @@
-SYMFONY_CONSOLE := php bin/console
+RUN := docker-compose -f docker-compose.yaml run --rm php
 
 default: help
 
@@ -11,27 +11,31 @@ help:
 	@echo "\033[32m   phpstan                \033[39m   run phpstan checks"
 	@echo "\033[32m   phpunit                \033[39m   run phpunit tests"
 	@echo "\033[32m   cs                     \033[39m   show files that need to be fixed"
+	@echo "\033[32m   cc                     \033[39m   clear all caches"
 	@echo "\033[32m   composer               \033[39m   install backend vendors"
 	@echo "\033[32m   cs-fixer               \033[39m   fix files that need to be fixed"
 	@echo "\033[32m   help                   \033[39m   display this help"
 	@echo "\033[32m   install                \033[39m   install the project or when you switch to another git branch"
 
-check: cs-fixer phpstan phpunit
+check: cs-fixer phpunit phpstan
+
+phpstan: cc vendor
+	$(RUN) vendor/bin/phpstan analyse -c phpstan.neon --level=max src/
 
 phpunit: vendor
-	php vendor/bin/phpunit
-
-phpstan: vendor
-	php vendor/bin/phpstan analyse -c phpstan.neon --level=7 src/ test/
+	$(RUN) vendor/bin/phpunit
 
 cs: vendor
-	php vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
+	$(RUN) vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
+
+cc:
+	$(RUN) rm -rf var/cache/*
 
 composer:
-	composer install --prefer-dist --no-progress --no-suggest
+	$(RUN) composer install --prefer-dist --no-progress --no-suggest
 
 cs-fixer: vendor
-	php vendor/bin/php-cs-fixer fix --verbose
+	$(RUN) vendor/bin/php-cs-fixer fix --verbose
 
 install: composer
 

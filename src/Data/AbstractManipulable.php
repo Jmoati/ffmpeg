@@ -9,7 +9,7 @@ abstract class AbstractManipulable
     /** @var FilterCollection */
     protected $filters;
 
-    /** @var Media */
+    /** @var Media|null */
     protected $media;
 
     public function __construct()
@@ -17,19 +17,11 @@ abstract class AbstractManipulable
         $this->filters = new FilterCollection($this);
     }
 
-    /**
-     * @return FilterCollection
-     */
     public function filters(): FilterCollection
     {
         return $this->filters;
     }
 
-    /**
-     * @param Media $media
-     *
-     * @return AbstractManipulable
-     */
     public function setMedia(Media $media): self
     {
         $this->media = $media;
@@ -37,10 +29,7 @@ abstract class AbstractManipulable
         return $this;
     }
 
-    /**
-     * @return Media
-     */
-    public function media(): Media
+    public function media(): ?Media
     {
         return $this->media;
     }
