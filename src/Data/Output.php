@@ -45,11 +45,6 @@ class Output
     /** @var bool */
     protected $upscale = false;
 
-    /**
-     * @param string $audioCodec
-     *
-     * @return Output
-     */
     public function setAudioCodec(string $audioCodec): self
     {
         $this->audioCodec = $audioCodec;
@@ -57,19 +52,11 @@ class Output
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAudioCodec(): ?string
     {
         return $this->audioCodec;
     }
 
-    /**
-     * @param int $audioKiloBitrate
-     *
-     * @return Output
-     */
     public function setAudioKiloBitrate(int $audioKiloBitrate): self
     {
         $this->audioKiloBitrate = $audioKiloBitrate;
@@ -77,19 +64,11 @@ class Output
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getAudioKiloBitrate(): ?int
     {
         return $this->audioKiloBitrate;
     }
 
-    /**
-     * @param array $extraParams
-     *
-     * @return Output
-     */
     public function setExtraParams(array $extraParams): self
     {
         $this->extraParams = $extraParams;
@@ -97,12 +76,6 @@ class Output
         return $this;
     }
 
-    /**
-     * @param string $param
-     * @param mixed  $value
-     *
-     * @return Output
-     */
     public function addExtraParam(string $param, $value = null): self
     {
         $this->extraParams[$param] = $value;
@@ -110,19 +83,11 @@ class Output
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getExtraParams(): array
     {
         return $this->extraParams;
     }
 
-    /**
-     * @param string $format
-     *
-     * @return Output
-     */
     public function setFormat(string $format): self
     {
         $this->format = $format;
@@ -130,19 +95,11 @@ class Output
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getFormat(): ?string
     {
         return $this->format;
     }
 
-    /**
-     * @param int $passes
-     *
-     * @return Output
-     */
     public function setPasses(int $passes): self
     {
         $this->passes = $passes;
@@ -150,19 +107,11 @@ class Output
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getPasses(): int
     {
         return $this->passes;
     }
 
-    /**
-     * @param int $width
-     *
-     * @return Output
-     */
     public function setWidth(int $width): self
     {
         $this->width = $width - ($width % 2);
@@ -170,11 +119,6 @@ class Output
         return $this;
     }
 
-    /**
-     * @param int $height
-     *
-     * @return Output
-     */
     public function setHeight(int $height): self
     {
         $this->height = $height - ($height % 2);
@@ -182,27 +126,16 @@ class Output
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getWidth(): ?int
     {
         return $this->width;
     }
 
-    /**
-     * @return int|null
-     */
     public function getHeight(): ?int
     {
         return $this->height;
     }
 
-    /**
-     * @param string $size
-     *
-     * @return Output
-     */
     public function setSize(string $size): self
     {
         $size = explode('x', $size);
@@ -218,11 +151,6 @@ class Output
         return $this;
     }
 
-    /**
-     * @param bool $upscale
-     *
-     * @return Output
-     */
     public function setUpscale(bool $upscale): self
     {
         $this->upscale = $upscale;
@@ -230,19 +158,11 @@ class Output
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getUpscale(): bool
     {
         return $this->upscale;
     }
 
-    /**
-     * @param string $videoCodec
-     *
-     * @return Output
-     */
     public function setVideoCodec(string $videoCodec): self
     {
         $this->videoCodec = $videoCodec;
@@ -250,19 +170,11 @@ class Output
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getVideoCodec(): ?string
     {
         return $this->videoCodec;
     }
 
-    /**
-     * @param string $audioRate
-     *
-     * @return Output
-     */
     public function setAudioRate(string $audioRate): self
     {
         $this->audioRate = $audioRate;
@@ -270,19 +182,11 @@ class Output
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAudioRate(): ?string
     {
         return $this->audioRate;
     }
 
-    /**
-     * @param int $frameRate
-     *
-     * @return Output
-     */
     public function setFrameRate(int $frameRate): self
     {
         $this->frameRate = $frameRate;
@@ -290,19 +194,11 @@ class Output
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getFrameRate(): ?int
     {
         return $this->frameRate;
     }
 
-    /**
-     * @param int $videoKiloBitrate
-     *
-     * @return Output
-     */
     public function setVideoKiloBitrate(int $videoKiloBitrate): self
     {
         $this->videoKiloBitrate = $videoKiloBitrate;
@@ -310,25 +206,16 @@ class Output
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getVideoKiloBitrate(): ?int
     {
         return $this->videoKiloBitrate;
     }
 
-    /**
-     * @return Output
-     */
     public static function create(): self
     {
         return new static();
     }
 
-    /**
-     * @return Output
-     */
     public function clearMaps(): self
     {
         $this->maps = [];
@@ -336,11 +223,6 @@ class Output
         return $this;
     }
 
-    /**
-     * @param string $map
-     *
-     * @return Output
-     */
     public function addMap(string $map): self
     {
         $this->maps[] = $map;
@@ -348,17 +230,11 @@ class Output
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getMaps(): array
     {
         return $this->maps;
     }
 
-    /**
-     * @return array
-     */
     public function getParams(): array
     {
         $params = $this->extraParams;
@@ -376,14 +252,6 @@ class Output
         return $params;
     }
 
-    /**
-     * @param array  $params
-     * @param string $key
-     * @param string $getter
-     * @param string $suffix
-     *
-     * @return Output
-     */
     protected function setParam(array &$params, string $key, string $getter, string $suffix = ''): self
     {
         if (null !== $this->$getter()) {

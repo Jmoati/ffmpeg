@@ -9,10 +9,6 @@ class Frame extends AbstractManipulable
     /** @var Timecode */
     protected $timecode;
 
-    /**
-     * @param Media    $media
-     * @param Timecode $timecode
-     */
     public function __construct(Media $media, Timecode $timecode)
     {
         $this->media = $media;
@@ -21,29 +17,29 @@ class Frame extends AbstractManipulable
         parent::__construct();
     }
 
-    /**
-     * @param string $filename
-     * @param bool   $accurate
-     *
-     * @return bool
-     */
     public function save(string $filename, bool $accurate = false): bool
     {
+        if (null === $this->media) {
+            return false;
+        }
+
+        $filters = [];
+
+        foreach ($this->filters() as $filter) {
+            array_merge($filters, $filter->__toArray());
+        }
+
         if (false === $accurate) {
-            $command = sprintf(
-                '-y -ss %s -i "%s" %s -vframes 1 -f image2 "%s"',
-                $this->timecode,
-                $this->media->format()->getFilename(),
-                (string) $this->filters(),
-                $filename
+            $command = array_merge(
+                ['-y', '-ss', $this->timecode,  '-i',  $this->media->format()->getFilename()],
+                $filters,
+                ['-vframes',  1,  '-f',  'image2', $filename]
             );
         } else {
-            $command = sprintf(
-                '-y -i "%s" %s -vframes 1 -ss %s -f image2 "%s"',
-                $this->media->format()->getFilename(),
-                (string) $this->filters(),
-                $this->timecode,
-                $filename
+            $command = array_merge(
+                ['-y', '-i',  $this->media->format()->getFilename()],
+                $filters,
+                ['-vframes',  1,  '-ss', $this->timecode, '-f',  'image2', $filename]
             );
         }
 

@@ -21,16 +21,11 @@ class Media
     protected $ffmpeg;
 
     /** @var Filesystem */
-    protected $fs;
+    protected $filesystem;
 
-    /**
-     * @param FFMpeg                $ffmpeg
-     * @param StreamCollection|null $streams
-     * @param Format|null           $format
-     */
     public function __construct(FFMpeg $ffmpeg, StreamCollection $streams = null, Format $format = null)
     {
-        $this->fs = new Filesystem();
+        $this->filesystem = new Filesystem();
         $this->ffmpeg = $ffmpeg;
 
         $this->streams = (null === $streams) ? new StreamCollection() : $streams;
@@ -40,57 +35,38 @@ class Media
         $this->format->setMedia($this);
     }
 
-    /**
-     * @return StreamCollection
-     */
     public function streams(): StreamCollection
     {
         return $this->streams;
     }
 
-    /**
-     * @return Format
-     */
     public function format(): Format
     {
         return $this->format;
     }
 
-    /**
-     * @return FFMpeg
-     */
     public function ffmpeg(): FFMpeg
     {
         return $this->ffmpeg;
     }
 
-    /**
-     * @param Timecode $timecode
-     *
-     * @return Frame
-     */
     public function frame(Timecode $timecode): Frame
     {
         return new Frame($this, $timecode);
     }
 
-    /**
-     * @param Output $output
-     *
-     * @return int
-     */
     public function getFrameCount(Output $output): int
     {
         $commandBuilder = new CommandBuilder($this, $output, true);
         $frames = 0;
 
         $this->ffmpeg->run(
-            sprintf(
-                '%s %s %s "%s" -y',
+            array_merge(
                 $commandBuilder->computeInputs(),
                 $commandBuilder->computeFormatFilters(),
                 $commandBuilder->computeParams(),
-                '/dev/null'
+                ['/dev/null'],
+                ['-y']
             ),
             function ($type, $buffer) use (&$frames) {
                 if (preg_match('/frame=\s*([0-9]+)\s/', $buffer, $matches)) {
@@ -102,23 +78,19 @@ class Media
         return $frames + 1;
     }
 
-    /**
-     * @param string                 $filename
-     * @param Output                 $output
-     * @param ProgressInterface|null $callback
-     *
-     * @return bool
-     */
-    public function save(string $filename, Output $output, ProgressInterface $callback = null): bool
+    public function save(string $filename, Output $output, ?ProgressInterface $callback = null): bool
     {
         $commandBuilder = new CommandBuilder($this, $output);
         $tmpDir = sys_get_temp_dir().'/'.sha1(uniqid()).'/';
 
-        $this->fs->mkdir($tmpDir);
+        $this->filesystem->mkdir($tmpDir);
 
         $passes = $output->getPasses();
 
-        $this->setCallbackProperty($callback, 'totalPasses', $passes);
+        if (null !== $callback) {
+            $this->setCallbackProperty($callback, 'totalPasses', $passes);
+        }
+
         $process = null;
 
         for ($i = 0, $l = $passes; $i < $l; ++$i) {
@@ -130,14 +102,14 @@ class Media
             }
 
             $process = $this->ffmpeg->run(
-                sprintf(
-                    '%s %s %s %s "%s" -y',
+                array_merge(
                     $commandBuilder->computeInputs(),
                     $commandBuilder->computePasses($i, $passes, $tmpDir),
                     $commandBuilder->computeFormatFilters(),
                     $commandBuilder->computeParams(),
-                    $filename
-                ),
+                    [$filename],
+                    ['-y']
+            ),
                 $callback
             );
 
@@ -146,7 +118,7 @@ class Media
             }
         }
 
-        $this->fs->remove($tmpDir);
+        $this->filesystem->remove($tmpDir);
 
         if (null === $process) {
             throw new \LogicException();
@@ -155,14 +127,7 @@ class Media
         return 0 === $process->getExitCode();
     }
 
-    /**
-     * @param ProgressInterface|null $callback
-     * @param string                 $property
-     * @param int                    $value
-     *
-     * @return Media
-     */
-    protected function setCallbackProperty(ProgressInterface $callback = null, string $property, int $value): self
+    protected function setCallbackProperty(ProgressInterface $callback, string $property, int $value): self
     {
         if (null !== $callback && property_exists($callback, $property)) {
             $callback->$property = $value;

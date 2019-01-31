@@ -8,11 +8,5 @@ use Symfony\Component\Process\Process;
 
 interface FFInterface
 {
-    /**
-     * @param string        $command
-     * @param callable|null $callback
-     *
-     * @return Process
-     */
-    public function run(string $command, callable $callback = null): Process;
+    public function run(array $command, callable $callback = null): Process;
 }
