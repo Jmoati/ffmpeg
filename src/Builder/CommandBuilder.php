@@ -7,22 +7,13 @@ namespace Jmoati\FFMpeg\Builder;
 use Jmoati\FFMpeg\Data\Media;
 use Jmoati\FFMpeg\Data\Output;
 
-class CommandBuilder
+final class CommandBuilder
 {
-    /** @var Media */
-    protected $media;
-
-    /** @var Output|null */
-    protected $output;
-
-    /** @var string[] */
-    protected $files = [];
-
-    /** @var string[] */
-    protected $params = [];
-
-    /** @var bool */
-    protected $dryRun;
+    private Media $media;
+    private ?Output $output;
+    private array $files = [];
+    private array $params = [];
+    private bool $dryRun;
 
     public function __construct(Media $media, Output $output = null, bool $dryRun = false)
     {

@@ -14,11 +14,8 @@ final class ResizeFilter extends FilterAbstract implements FormatFilterInterface
     public const MODE_MAX_WIDTH = 2;
     public const MODE_MAX_HEIGHT = 4;
 
-    /** @var Dimension */
-    private $dimension;
-
-    /** @var int */
-    private $mode;
+    private Dimension $dimension;
+    private int $mode;
 
     public function __construct(Dimension $dimension, int $mode = self::MODE_INSET)
     {

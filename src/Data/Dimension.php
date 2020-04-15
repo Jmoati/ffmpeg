@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-class Dimension
+final class Dimension
 {
-    /** @var int */
-    protected $width;
-
-    /** @var int */
-    protected $height;
+    private int $width;
+    private int $height;
 
     public function __construct(int $width, int $height)
     {

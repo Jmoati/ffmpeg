@@ -2,6 +2,6 @@ version: '3'
 
 services:
   php:
-    image: jmoati/php-fpm
+    build: ./dist/docker
     volumes:
       - .:/app:cached

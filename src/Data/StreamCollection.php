@@ -6,10 +6,9 @@ namespace Jmoati\FFMpeg\Data;
 
 use ArrayIterator;
 
-class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
+final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 {
-    /** @var Stream[] */
-    protected $streams = [];
+    private array $streams = [];
 
     public function __construct(array $streams = [])
     {
@@ -100,8 +99,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param string|int $offset
-     *
-     * @return bool
      */
     public function offsetExists($offset): bool
     {
@@ -110,8 +107,6 @@ class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param string|int $offset
-     *
-     * @return Stream
      */
     public function offsetGet($offset): Stream
     {

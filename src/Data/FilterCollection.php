@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
+use ArrayAccess;
 use ArrayIterator;
+use Countable;
+use IteratorAggregate;
 use Jmoati\FFMpeg\Filter\FilterInterface;
 
-class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
+class FilterCollection implements Countable, IteratorAggregate, ArrayAccess
 {
     /** @var FilterInterface[] */
-    protected $filters = [];
-
-    /** @var AbstractManipulable */
-    protected $parent;
+    protected array $filters = [];
+    protected AbstractManipulable $parent;
 
     public function __construct(AbstractManipulable $parent)
     {
@@ -69,8 +70,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param int|string $offset
-     *
-     * @return bool
      */
     public function offsetExists($offset): bool
     {
@@ -79,8 +78,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param int|string $offset
-     *
-     * @return FilterInterface
      */
     public function offsetGet($offset): FilterInterface
     {
@@ -90,8 +87,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
     /**
      * @param int|string      $offset
      * @param FilterInterface $value
-     *
-     * @return FilterCollection
      */
     public function offsetSet($offset, $value): self
     {
@@ -102,8 +97,6 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 
     /**
      * @param int|string $offset
-     *
-     * @return FilterCollection
      */
     public function offsetUnset($offset): self
     {

@@ -7,31 +7,25 @@ namespace Jmoati\FFMpeg\Data;
 use Jmoati\FFMpeg\Builder\CommandBuilder;
 use Jmoati\FFMpeg\FFMpeg;
 use Jmoati\FFMpeg\Progress\ProgressInterface;
+use LogicException;
 use Symfony\Component\Filesystem\Filesystem;
 
-class Media
+final class Media
 {
-    /** @var StreamCollection */
-    protected $streams;
-
-    /** @var Format */
-    protected $format;
-
-    /** @var FFMpeg */
-    protected $ffmpeg;
-
-    /** @var Filesystem */
-    protected $filesystem;
+    private StreamCollection $streams;
+    private Format $format;
+    private FFmpeg $ffmpeg;
+    private Filesystem $filesystem;
 
     public function __construct(FFMpeg $ffmpeg, StreamCollection $streams = null, Format $format = null)
     {
         $this->filesystem = new Filesystem();
         $this->ffmpeg = $ffmpeg;
 
-        $this->streams = (null === $streams) ? new StreamCollection() : $streams;
+        $this->streams = $streams ?? new StreamCollection();
         $this->streams->setMedia($this);
-        $this->format = (null === $format) ? new Format() : $format;
 
+        $this->format = $format ?? new Format();
         $this->format->setMedia($this);
     }
 
@@ -53,29 +47,6 @@ class Media
     public function frame(Timecode $timecode): Frame
     {
         return new Frame($this, $timecode);
-    }
-
-    public function getFrameCount(Output $output): int
-    {
-        $commandBuilder = new CommandBuilder($this, $output, true);
-        $frames = 0;
-
-        $this->ffmpeg->run(
-            array_merge(
-                $commandBuilder->computeInputs(),
-                $commandBuilder->computeFormatFilters(),
-                $commandBuilder->computeParams(),
-                ['/dev/null'],
-                ['-y']
-            ),
-            function ($type, $buffer) use (&$frames) {
-                if (preg_match('/frame=\s*([0-9]+)\s/', $buffer, $matches)) {
-                    $frames = $matches[1];
-                }
-            }
-        );
-
-        return $frames + 1;
     }
 
     public function save(string $filename, Output $output, ?ProgressInterface $callback = null): bool
@@ -109,7 +80,7 @@ class Media
                     $commandBuilder->computeParams(),
                     [$filename],
                     ['-y']
-            ),
+                ),
                 $callback
             );
 
@@ -121,13 +92,36 @@ class Media
         $this->filesystem->remove($tmpDir);
 
         if (null === $process) {
-            throw new \LogicException();
+            throw new LogicException();
         }
 
         return 0 === $process->getExitCode();
     }
 
-    protected function setCallbackProperty(ProgressInterface $callback, string $property, int $value): self
+    public function getFrameCount(Output $output): int
+    {
+        $commandBuilder = new CommandBuilder($this, $output, true);
+        $frames = 0;
+
+        $this->ffmpeg->run(
+            array_merge(
+                $commandBuilder->computeInputs(),
+                $commandBuilder->computeFormatFilters(),
+                $commandBuilder->computeParams(),
+                ['/dev/null'],
+                ['-y']
+            ),
+            function ($type, $buffer) use (&$frames) {
+                if (preg_match('/frame=\s*([0-9]+)\s/', $buffer, $matches)) {
+                    $frames = $matches[1];
+                }
+            }
+        );
+
+        return $frames + 1;
+    }
+
+    private function setCallbackProperty(ProgressInterface $callback, string $property, int $value): self
     {
         if (null !== $callback && property_exists($callback, $property)) {
             $callback->$property = $value;
