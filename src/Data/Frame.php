@@ -6,8 +6,7 @@ namespace Jmoati\FFMpeg\Data;
 
 class Frame extends AbstractManipulable
 {
-    /** @var Timecode */
-    protected $timecode;
+    protected Timecode $timecode;
 
     public function __construct(Media $media, Timecode $timecode)
     {
@@ -26,7 +25,7 @@ class Frame extends AbstractManipulable
         $filters = [];
 
         foreach ($this->filters() as $filter) {
-            array_merge($filters, $filter->__toArray());
+            $filters += $filter->__toArray();
         }
 
         if (false === $accurate) {

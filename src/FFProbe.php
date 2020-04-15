@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg;
 
+use Exception;
 use Jmoati\FFMpeg\Data\Format;
 use Jmoati\FFMpeg\Data\Media;
 use Jmoati\FFMpeg\Data\StreamCollection;
@@ -15,25 +16,18 @@ final class FFProbe implements FFInterface
     private const COMMAND_FORMAT = '-show_format';
     private const COMMAND_MEDIA = '-show_streams -show_format';
 
-    /** @var string */
-    private $bin;
+    private string $bin;
 
     public function __construct()
     {
-        if (file_exists(__DIR__.'/../vendor/bin/ffprobe')) {
-            $this->bin = (string) realpath(__DIR__.'/../vendor/bin/ffprobe');
-        } elseif (file_exists(__DIR__.'/../../../bin/ffprobe')) {
-            $this->bin = (string) realpath(__DIR__.'/../../../bin/ffprobe');
-        } else {
-            $process = new Process(['which', 'ffprobe']);
-            $process->run();
+        $process = new Process(['which', 'ffprobe']);
+        $process->run();
 
-            if ($process->getExitCode() < 1) {
-                $this->bin = 'ffprobe';
-            } else {
-                throw new \Exception('No ffprobe binary found');
-            }
+        if ($process->getExitCode() > 0) {
+            throw new Exception('no ffprobe binary found');
         }
+
+        $this->bin = str_replace(PHP_EOL, '', $process->getOutput());
     }
 
     public static function create(): self
@@ -65,7 +59,7 @@ final class FFProbe implements FFInterface
         return $media;
     }
 
-    public function run(array $command, callable  $callback = null): Process
+    public function run(array $command, callable $callback = null): Process
     {
         $process = new Process(array_merge([$this->bin], $command), null, null, null, 0.0);
         $process->run($callback);
@@ -74,10 +68,7 @@ final class FFProbe implements FFInterface
     }
 
     /**
-     * @param string $filename
-     * @param string $command
-     *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return Format|StreamCollection|Media
      */
@@ -86,7 +77,7 @@ final class FFProbe implements FFInterface
         $process = $this->run(array_merge(explode(' ', self::COMMAND_MEDIA), ['-print_format', 'json', $filename]));
 
         if ($process->run() > 1) {
-            throw new \Exception('File can\'t be probe.');
+            throw new Exception('File can\'t be probe.');
         }
 
         $output = json_decode(utf8_encode($process->getOutput()), true);
@@ -104,7 +95,7 @@ final class FFProbe implements FFInterface
             case self::COMMAND_MEDIA:
                 return new Media(new FFMpeg($this), new StreamCollection($output['streams']), new Format($output['format']));
             default:
-                throw new \Exception('Command not found');
+                throw new Exception('Command not found');
         }
     }
 }

@@ -10,8 +10,7 @@ final class RotationFilter extends FilterAbstract implements FormatFilterInterfa
     public const ROTATION_180 = 'transpose=1, transpose=1';
     public const ROTATION_270 = 'transpose=2';
 
-    /** @var string */
-    private $rotation = '';
+    private string $rotation;
 
     public function __construct(string $rotation)
     {

@@ -8,16 +8,9 @@ use Jmoati\FFMpeg\Data\Timecode;
 
 final class ClipFilter extends FilterAbstract implements FormatFilterInterface, StreamFilterInterface
 {
-    /** @var Timecode|null */
-    protected $start;
+    protected ?Timecode $start;
+    protected ?Timecode $duration;
 
-    /** @var Timecode|null */
-    protected $duration;
-
-    /**
-     * @param Timecode|null $duration
-     * @param Timecode|null $start
-     */
     public function __construct(Timecode $duration = null, Timecode $start = null)
     {
         $this->start = $start;

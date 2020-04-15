@@ -4,52 +4,25 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-class Output
+final class Output
 {
-    /** @var int|null */
-    protected $audioKiloBitrate;
+    private ?int $audioKiloBitrate = null;
+    private ?string $audioCodec = null;
+    private ?string $audioRate = null;
+    private ?int $frameRate = null;
+    private ?int $videoKiloBitrate = null;
+    private ?string $videoCodec = null;
+    private ?string $format = null;
+    private int $passes = 1;
+    private array $extraParams = [];
+    private ?int $width = null;
+    private ?int $height = null;
+    private array $maps = [];
+    private bool $upscale = false;
 
-    /** @var string|null */
-    protected $audioCodec;
-
-    /** @var string|null */
-    protected $audioRate;
-
-    /** @var int|null */
-    protected $frameRate;
-
-    /** @var int|null */
-    protected $videoKiloBitrate;
-
-    /** @var string|null */
-    protected $videoCodec;
-
-    /** @var string|null */
-    protected $format;
-
-    /** @var int */
-    protected $passes = 1;
-
-    /** @var array */
-    protected $extraParams = [];
-
-    /** @var int|null */
-    protected $width;
-
-    /** @var int|null */
-    protected $height;
-
-    /** @var array */
-    protected $maps = [];
-
-    /** @var bool */
-    protected $upscale = false;
-
-    public function setAudioCodec(string $audioCodec): self
+    public static function create(): self
     {
-        $this->audioCodec = $audioCodec;
-
-        return $this;
+        return new static();
     }
 
     public function getAudioCodec(): ?string
@@ -57,9 +30,9 @@ class Output
         return $this->audioCodec;
     }
 
-    public function setAudioKiloBitrate(int $audioKiloBitrate): self
+    public function setAudioCodec(string $audioCodec): self
     {
-        $this->audioKiloBitrate = $audioKiloBitrate;
+        $this->audioCodec = $audioCodec;
 
         return $this;
     }
@@ -69,13 +42,16 @@ class Output
         return $this->audioKiloBitrate;
     }
 
-    public function setExtraParams(array $extraParams): self
+    public function setAudioKiloBitrate(int $audioKiloBitrate): self
     {
-        $this->extraParams = $extraParams;
+        $this->audioKiloBitrate = $audioKiloBitrate;
 
         return $this;
     }
 
+    /**
+     * @param string|int|null $value
+     */
     public function addExtraParam(string $param, $value = null): self
     {
         $this->extraParams[$param] = $value;
@@ -88,9 +64,9 @@ class Output
         return $this->extraParams;
     }
 
-    public function setFormat(string $format): self
+    public function setExtraParams(array $extraParams): self
     {
-        $this->format = $format;
+        $this->extraParams = $extraParams;
 
         return $this;
     }
@@ -100,9 +76,9 @@ class Output
         return $this->format;
     }
 
-    public function setPasses(int $passes): self
+    public function setFormat(string $format): self
     {
-        $this->passes = $passes;
+        $this->format = $format;
 
         return $this;
     }
@@ -112,16 +88,9 @@ class Output
         return $this->passes;
     }
 
-    public function setWidth(int $width): self
+    public function setPasses(int $passes): self
     {
-        $this->width = $width - ($width % 2);
-
-        return $this;
-    }
-
-    public function setHeight(int $height): self
-    {
-        $this->height = $height - ($height % 2);
+        $this->passes = $passes;
 
         return $this;
     }
@@ -131,9 +100,23 @@ class Output
         return $this->width;
     }
 
+    public function setWidth(int $width): self
+    {
+        $this->width = $width - ($width % 2);
+
+        return $this;
+    }
+
     public function getHeight(): ?int
     {
         return $this->height;
+    }
+
+    public function setHeight(int $height): self
+    {
+        $this->height = $height - ($height % 2);
+
+        return $this;
     }
 
     public function setSize(string $size): self
@@ -151,21 +134,14 @@ class Output
         return $this;
     }
 
-    public function setUpscale(bool $upscale): self
-    {
-        $this->upscale = $upscale;
-
-        return $this;
-    }
-
     public function getUpscale(): bool
     {
         return $this->upscale;
     }
 
-    public function setVideoCodec(string $videoCodec): self
+    public function setUpscale(bool $upscale): self
     {
-        $this->videoCodec = $videoCodec;
+        $this->upscale = $upscale;
 
         return $this;
     }
@@ -175,9 +151,9 @@ class Output
         return $this->videoCodec;
     }
 
-    public function setAudioRate(string $audioRate): self
+    public function setVideoCodec(string $videoCodec): self
     {
-        $this->audioRate = $audioRate;
+        $this->videoCodec = $videoCodec;
 
         return $this;
     }
@@ -187,9 +163,9 @@ class Output
         return $this->audioRate;
     }
 
-    public function setFrameRate(int $frameRate): self
+    public function setAudioRate(string $audioRate): self
     {
-        $this->frameRate = $frameRate;
+        $this->audioRate = $audioRate;
 
         return $this;
     }
@@ -199,9 +175,9 @@ class Output
         return $this->frameRate;
     }
 
-    public function setVideoKiloBitrate(int $videoKiloBitrate): self
+    public function setFrameRate(int $frameRate): self
     {
-        $this->videoKiloBitrate = $videoKiloBitrate;
+        $this->frameRate = $frameRate;
 
         return $this;
     }
@@ -211,9 +187,11 @@ class Output
         return $this->videoKiloBitrate;
     }
 
-    public static function create(): self
+    public function setVideoKiloBitrate(int $videoKiloBitrate): self
     {
-        return new static();
+        $this->videoKiloBitrate = $videoKiloBitrate;
+
+        return $this;
     }
 
     public function clearMaps(): self
@@ -252,7 +230,7 @@ class Output
         return $params;
     }
 
-    protected function setParam(array &$params, string $key, string $getter, string $suffix = ''): self
+    private function setParam(array &$params, string $key, string $getter, string $suffix = ''): self
     {
         if (null !== $this->$getter()) {
             if (is_array($this->$getter())) {

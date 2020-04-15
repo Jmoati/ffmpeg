@@ -4,35 +4,32 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg;
 
+use Exception;
 use Jmoati\FFMpeg\Data\Media;
 use Symfony\Component\Process\Process;
 
 final class FFMpeg implements FFInterface
 {
-    /** @var FFProbe FProbe */
-    private $ffprobe;
-
-    /** @var string */
-    private $bin;
+    private FFProbe $ffprobe;
+    private string $bin;
 
     public function __construct(FFProbe $ffprobe)
     {
         $this->ffprobe = $ffprobe;
 
-        if (file_exists(__DIR__.'/../vendor/bin/ffmpeg')) {
-            $this->bin = (string) realpath(__DIR__.'/../vendor/bin/ffmpeg');
-        } elseif (file_exists(__DIR__.'/../../../bin/ffmpeg')) {
-            $this->bin = (string) realpath(__DIR__.'/../../../bin/ffmpeg');
-        } else {
-            $process = new Process(['which',  'ffmpeg']);
-            $process->run();
+        $process = new Process(['which', 'ffmpeg']);
+        $process->run();
 
-            if ($process->getExitCode() < 1) {
-                $this->bin = 'ffmpeg';
-            } else {
-                throw new \Exception('no ffmpeg binary found');
-            }
+        if ($process->getExitCode() > 0) {
+            throw new Exception('no ffmpeg binary found');
         }
+
+        $this->bin = str_replace(PHP_EOL, '', $process->getOutput());
+    }
+
+    public static function createFile(): Media
+    {
+        return new Media(self::create());
     }
 
     public static function create(FFProbe $ffprobe = null): self
@@ -42,11 +39,6 @@ final class FFMpeg implements FFInterface
         }
 
         return new static($ffprobe);
-    }
-
-    public static function createFile(): Media
-    {
-        return new Media(self::create());
     }
 
     public static function openFile(string $filename): Media

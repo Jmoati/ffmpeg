@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-class Stream extends AbstractDataCollection
+final class Stream extends AbstractDataCollection
 {
     public function __construct(array $properties)
     {

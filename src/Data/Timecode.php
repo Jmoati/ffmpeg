@@ -4,19 +4,12 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-class Timecode
+final class Timecode
 {
-    /** @var int */
-    protected $hours = 0;
-
-    /** @var int */
-    protected $minutes = 0;
-
-    /** @var int */
-    protected $seconds = 0;
-
-    /** @var int */
-    protected $frames = 0;
+    private int $hours;
+    private int $minutes;
+    private int $seconds;
+    private int $frames;
 
     public function __construct(int $frames = 0, int $seconds = 0, int $minutes = 0, int $hours = 0)
     {
@@ -31,24 +24,9 @@ class Timecode
         return sprintf('%02d:%02d:%02d.%02d', $this->hours, $this->minutes, $this->seconds, $this->frames);
     }
 
-    public static function create(): self
-    {
-        return new static();
-    }
-
     public static function createFromFrame(int $frames, float $fps): self
     {
         return self::create()->fromFrame($frames, $fps);
-    }
-
-    public static function createFromSeconds(float $secondes): self
-    {
-        return self::create()->fromSeconds($secondes);
-    }
-
-    public static function createFromString(string $string): self
-    {
-        return self::create()->fromString($string);
     }
 
     public function fromFrame(int $frames, float $fps): self
@@ -70,23 +48,19 @@ class Timecode
         return $this;
     }
 
-    public function add(self $timecode): self
+    public static function create(): self
     {
-        $this->fromSeconds($this->getSeconds() + $timecode->getSeconds());
-
-        return $this;
+        return new static();
     }
 
-    public function subtract(self $timecode): self
+    public static function createFromSeconds(float $secondes): self
     {
-        $this->fromSeconds($this->getSeconds() - $timecode->getSeconds());
-
-        return $this;
+        return self::create()->fromSeconds($secondes);
     }
 
-    public function getSeconds(): float
+    public static function createFromString(string $string): self
     {
-        return $this->hours * 3600 + $this->minutes * 60 + $this->seconds + $this->frames / 100;
+        return self::create()->fromString($string);
     }
 
     public function fromString(string $string): self
@@ -97,6 +71,25 @@ class Timecode
         $this->minutes = (int) $matches[2];
         $this->seconds = (int) $matches[3];
         $this->frames = (int) $matches[4];
+
+        return $this;
+    }
+
+    public function add(self $timecode): self
+    {
+        $this->fromSeconds($this->getSeconds() + $timecode->getSeconds());
+
+        return $this;
+    }
+
+    public function getSeconds(): float
+    {
+        return $this->hours * 3600 + $this->minutes * 60 + $this->seconds + $this->frames / 100;
+    }
+
+    public function subtract(self $timecode): self
+    {
+        $this->fromSeconds($this->getSeconds() - $timecode->getSeconds());
 
         return $this;
     }

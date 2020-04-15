@@ -32,10 +32,6 @@ class Progress implements ProgressInterface
     /** @var int */
     public $pourcent = 0;
 
-    /**
-     * @param string $type
-     * @param string $data
-     */
     public function __invoke(string $type, string $data): void
     {
         if (preg_match('/frame=\s*([0-9]+)\s*fps=\s*([0-9]+)\s*/', $data, $matches)) {
@@ -46,9 +42,6 @@ class Progress implements ProgressInterface
         $this->buffer .= $data;
     }
 
-    /**
-     * @return int
-     */
     public function remaining(): int
     {
         if ($this->totalFrames > 0 && $this->currentFrame > 0 && $this->fps > 0) {
@@ -59,9 +52,6 @@ class Progress implements ProgressInterface
         return $this->remaining;
     }
 
-    /**
-     * @return int
-     */
     public function pourcent(): int
     {
         if ($this->totalFrames > 0 && $this->currentFrame > 0) {

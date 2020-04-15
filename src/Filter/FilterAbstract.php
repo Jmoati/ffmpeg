@@ -9,8 +9,7 @@ use Jmoati\FFMpeg\Data\Media;
 
 class FilterAbstract
 {
-    /** @var FilterCollection */
-    protected $parent;
+    protected FilterCollection $parent;
 
     public function setParent(FilterCollection $parent): self
     {
@@ -45,10 +44,6 @@ class FilterAbstract
             }
         }
 
-        throw new \LogicException(sprintf(
-            'Filter %s can\'t be use with %s',
-            basename(str_replace('\\', '/', get_class($this))),
-            $className
-        ));
+        throw new \LogicException(sprintf('Filter %s can\'t be use with %s', basename(str_replace('\\', '/', static::class)), $className));
     }
 }

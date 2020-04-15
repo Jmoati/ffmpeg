@@ -6,11 +6,8 @@ namespace Jmoati\FFMpeg\Data;
 
 abstract class AbstractManipulable
 {
-    /** @var FilterCollection */
-    protected $filters;
-
-    /** @var Media|null */
-    protected $media;
+    protected FilterCollection $filters;
+    protected ?Media $media = null;
 
     public function __construct()
     {
