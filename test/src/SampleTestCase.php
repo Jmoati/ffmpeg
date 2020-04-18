@@ -8,33 +8,22 @@ use PHPUnit\Framework\TestCase;
 
 abstract class SampleTestCase extends TestCase
 {
-    /** @var string */
-    protected $filenameImage;
+    protected string $filenameImage;
+    protected string $filenameAudio;
+    protected string $filenameVideo;
+    protected string $filenameVideoRotate;
+    protected string $filenameDestination = '/tmp/destination.mov';
+    protected string $filenameFrameDestination = '/tmp/destination.jpg';
+    protected string $filenameHttps = 'https://symfony.com/images/logos/header-logo.svg';
+    protected string $filenameBad;
 
-    /** @var string */
-    protected $filenameAudio;
-
-    /** @var string */
-    protected $filenameVideo;
-
-    /** @var string */
-    protected $filenameVideoRotate;
-
-    /** @var string */
-    protected $filenameDestination = '/tmp/destination.mov';
-
-    /** @var string */
-    protected $filenameFrameDestination = '/tmp/destination.jpg';
-
-    /**
-     * FFAbstract constructor.
-     */
     public function __construct()
     {
         $this->filenameVideo = realpath(__DIR__.'/../sample/ED.mov');
         $this->filenameAudio = realpath(__DIR__.'/../sample/Jens_East_-_Daybreak_feat_Henk_sample.mp3');
         $this->filenameVideoRotate = realpath(__DIR__.'/../sample/IMG_4279.MOV');
         $this->filenameImage = realpath(__DIR__.'/../sample/sea-2361247_640.jpg');
+        $this->filenameBad = realpath(__DIR__.'/../sample/bad.mov');
 
         parent::__construct();
     }

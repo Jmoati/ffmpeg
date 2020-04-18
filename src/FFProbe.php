@@ -82,6 +82,10 @@ final class FFProbe implements FFInterface
 
         $output = json_decode(utf8_encode($process->getOutput()), true);
 
+        if (empty($output)) {
+            throw new Exception('File can\'t be probe.');
+        }
+
         foreach ($output['streams'] as &$stream) {
             $stream['media_filename'] = $output['format']['filename'];
         }
