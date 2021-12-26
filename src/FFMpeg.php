@@ -24,7 +24,7 @@ final class FFMpeg implements FFInterface
             throw new Exception('no ffmpeg binary found');
         }
 
-        $this->bin = str_replace(PHP_EOL, '', $process->getOutput());
+        $this->bin = str_replace(\PHP_EOL, '', $process->getOutput());
     }
 
     public static function createFile(): Media

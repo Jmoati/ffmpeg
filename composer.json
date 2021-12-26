@@ -4,16 +4,16 @@
     "license": "GPL-3.0",
     "require": {
 
-        "php": ">=7.4",
-        "symfony/process": "^5.0",
-        "symfony/filesystem": "^5.0"
+        "php": ">=8.0",
+        "symfony/process": "^6.0",
+        "symfony/filesystem": "^6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",
-        "phpstan/phpstan": "^0.12",
-        "friendsofphp/php-cs-fixer": "^2.3",
-        "brianium/paratest": "4.0",
-        "symfony/var-dumper": "^5.0"
+        "phpstan/phpstan": "^1.2",
+        "friendsofphp/php-cs-fixer": "^3.4",
+        "brianium/paratest": "^6.4",
+        "symfony/var-dumper": "^6.0"
     },
     "authors": [
         {
@@ -24,7 +24,7 @@
     "autoload": {
         "psr-4": {
             "Jmoati\\FFMpeg\\": "src",
-            "Jmoati\\FFMpeg\\Test\\": "test/src"
+            "Jmoati\\FFMpeg\\Test\\": "tests/src"
         }
     }
 }

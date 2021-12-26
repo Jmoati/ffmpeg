@@ -27,7 +27,7 @@ final class FFProbe implements FFInterface
             throw new Exception('no ffprobe binary found');
         }
 
-        $this->bin = str_replace(PHP_EOL, '', $process->getOutput());
+        $this->bin = str_replace(\PHP_EOL, '', $process->getOutput());
     }
 
     public static function create(): self

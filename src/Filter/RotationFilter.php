@@ -15,7 +15,7 @@ final class RotationFilter extends FilterAbstract implements FormatFilterInterfa
     public function __construct(string $rotation)
     {
         if (!in_array($rotation, [self::ROTATION_90, self::ROTATION_180, self::ROTATION_270], true)) {
-            throw new \LogicException(sprintf('$rotation must be an ROTATION_X constant'));
+            throw new \LogicException('$rotation must be an ROTATION_X constant');
         }
 
         $this->rotation = $rotation;

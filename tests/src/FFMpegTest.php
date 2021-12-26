@@ -20,19 +20,18 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class FFMpegTest extends SampleTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->tearDown();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         (new Filesystem())->remove($this->filenameDestination);
         (new Filesystem())->remove($this->filenameFrameDestination);
     }
 
-    /** @test */
-    public function openFile()
+    public function testOpenFile()
     {
         $media = FFMpeg::openFile($this->filenameVideo);
 
@@ -61,15 +60,13 @@ class FFMpegTest extends SampleTestCase
         $this->assertFalse($audio->isImage());
     }
 
-    /** @test */
-    public function openHttpsFile()
+    public function testOpenHttpsFile()
     {
         $media = FFMpeg::openFile($this->filenameHttps);
         $this->assertTrue($media->streams()->first()->isImage());
     }
 
-    /** @test */
-    public function createFile()
+    public function testCreateFile()
     {
         $media = FFMpeg::createFile();
         $streams = $media->streams();
@@ -84,8 +81,7 @@ class FFMpegTest extends SampleTestCase
         $this->assertFalse($streams->videos()->first());
     }
 
-    /** @test */
-    public function encodage()
+    public function testEncodage()
     {
         $video = FFMpeg::openFile($this->filenameVideoRotate);
         $audio = FFMpeg::openFile($this->filenameAudio);
@@ -138,8 +134,7 @@ class FFMpegTest extends SampleTestCase
         $this->assertTrue($check->format()->get('duration') > 0);
     }
 
-    /** @test */
-    public function filter()
+    public function testFilter()
     {
         $video = FFMpeg::openFile($this->filenameVideo);
 
@@ -186,7 +181,7 @@ class FFMpegTest extends SampleTestCase
 
         $check = FFMpeg::openFile($this->filenameDestination);
 
-        $this->assertEquals(1, floor($check->format()->get('duration')));
+        $this->assertEquals(1, floor((float) $check->format()->get('duration')));
         $this->assertEquals(3, $video->format()->filters()->count());
 
         $video->format()->filters()->clear();
@@ -194,8 +189,7 @@ class FFMpegTest extends SampleTestCase
         $this->assertEquals(0, $video->format()->filters()->count());
     }
 
-    /** @test */
-    public function frame()
+    public function testFrame()
     {
         $timecode = Timecode::createFromFrame(2, 24);
 
@@ -213,8 +207,7 @@ class FFMpegTest extends SampleTestCase
         $this->assertTrue(file_exists($this->filenameFrameDestination));
     }
 
-    /** @test */
-    public function progress()
+    public function testProgress()
     {
         $progress = new Progress();
         $video = FFMpeg::openFile($this->filenameVideo);
@@ -229,8 +222,7 @@ class FFMpegTest extends SampleTestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
-    public function mustFail()
+    public function testMustFail()
     {
         $media = FFMpeg::openFile($this->filenameImage);
         $output = Output::create()
