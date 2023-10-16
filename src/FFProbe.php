@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg;
 
-use Exception;
 use Jmoati\FFMpeg\Data\Format;
 use Jmoati\FFMpeg\Data\Media;
 use Jmoati\FFMpeg\Data\StreamCollection;
@@ -24,7 +23,7 @@ final class FFProbe implements FFInterface
         $process->run();
 
         if ($process->getExitCode() > 0) {
-            throw new Exception('no ffprobe binary found');
+            throw new \Exception('no ffprobe binary found');
         }
 
         $this->bin = str_replace(\PHP_EOL, '', $process->getOutput());
@@ -68,22 +67,20 @@ final class FFProbe implements FFInterface
     }
 
     /**
-     * @throws Exception
-     *
-     * @return Format|StreamCollection|Media
+     * @throws \Exception
      */
-    private function probe(string $filename, string $command)
+    private function probe(string $filename, string $command): Format|Media|StreamCollection
     {
         $process = $this->run(array_merge(explode(' ', self::COMMAND_MEDIA), ['-print_format', 'json', $filename]));
 
         if ($process->run() > 1) {
-            throw new Exception('File can\'t be probe.');
+            throw new \Exception('File can\'t be probe.');
         }
 
-        $output = json_decode(utf8_encode($process->getOutput()), true);
+        $output = json_decode(mb_convert_encoding($process->getOutput(), 'UTF-8'), true);
 
         if (empty($output)) {
-            throw new Exception('File can\'t be probe.');
+            throw new \Exception('File can\'t be probe.');
         }
 
         foreach ($output['streams'] as &$stream) {
@@ -91,15 +88,11 @@ final class FFProbe implements FFInterface
         }
         unset($stream);
 
-        switch ($command) {
-            case self::COMMAND_STREAMS:
-                return new StreamCollection($output['streams']);
-            case self::COMMAND_FORMAT:
-                return new Format($output['format']);
-            case self::COMMAND_MEDIA:
-                return new Media(new FFMpeg($this), new StreamCollection($output['streams']), new Format($output['format']));
-            default:
-                throw new Exception('Command not found');
-        }
+        return match ($command) {
+            self::COMMAND_STREAMS => new StreamCollection($output['streams']),
+            self::COMMAND_FORMAT => new Format($output['format']),
+            self::COMMAND_MEDIA => new Media(new FFMpeg($this), new StreamCollection($output['streams']), new Format($output['format'])),
+            default => throw new \Exception('Command not found'),
+        };
     }
 }

@@ -6,12 +6,11 @@ namespace Jmoati\FFMpeg\Data;
 
 class Frame extends AbstractManipulable
 {
-    protected Timecode $timecode;
-
-    public function __construct(Media $media, Timecode $timecode)
-    {
+    public function __construct(
+        Media $media,
+        protected Timecode $timecode
+    ) {
         $this->media = $media;
-        $this->timecode = $timecode;
 
         parent::__construct();
     }

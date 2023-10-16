@@ -1,8 +1,13 @@
-FROM jmoati/php8-cli
+FROM composer:latest AS composer
+
+FROM php:fpm as php
 
 RUN apt-get update && \
-    apt-get install -y ffmpeg
+    apt-get upgrade -y && \
+    apt-get install -y ffmpeg && \
+    apt-get install -y libicu-dev  libzip-dev unzip && \
+    docker-php-ext-install -j$(nproc) bcmath exif intl opcache pcntl sockets zip calendar
 
-RUN wget https://getcomposer.org/download/latest-stable/composer.phar && \
-    mv composer.phar /usr/local/bin/composer && \
-    chmod +x /usr/local/bin/composer
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+WORKDIR /app

@@ -7,20 +7,20 @@ namespace Jmoati\FFMpeg\Data;
 use Jmoati\FFMpeg\Builder\CommandBuilder;
 use Jmoati\FFMpeg\FFMpeg;
 use Jmoati\FFMpeg\Progress\ProgressInterface;
-use LogicException;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class Media
 {
     private StreamCollection $streams;
     private Format $format;
-    private FFmpeg $ffmpeg;
     private Filesystem $filesystem;
 
-    public function __construct(FFMpeg $ffmpeg, StreamCollection $streams = null, Format $format = null)
-    {
+    public function __construct(
+        private FFMpeg $ffmpeg,
+        StreamCollection $streams = null,
+        Format $format = null
+    ) {
         $this->filesystem = new Filesystem();
-        $this->ffmpeg = $ffmpeg;
 
         $this->streams = $streams ?? new StreamCollection();
         $this->streams->setMedia($this);
@@ -49,7 +49,7 @@ final class Media
         return new Frame($this, $timecode);
     }
 
-    public function save(string $filename, Output $output, ?ProgressInterface $callback = null): bool
+    public function save(string $filename, Output $output, ProgressInterface $callback = null): bool
     {
         $commandBuilder = new CommandBuilder($this, $output);
         $tmpDir = sys_get_temp_dir().'/'.sha1(uniqid()).'/';
@@ -92,7 +92,7 @@ final class Media
         $this->filesystem->remove($tmpDir);
 
         if (null === $process) {
-            throw new LogicException();
+            throw new \LogicException();
         }
 
         return 0 === $process->getExitCode();
@@ -123,7 +123,7 @@ final class Media
 
     private function setCallbackProperty(ProgressInterface $callback, string $property, int $value): self
     {
-        if (null !== $callback && property_exists($callback, $property)) {
+        if (property_exists($callback, $property)) {
             $callback->$property = $value;
         }
 

@@ -6,17 +6,12 @@ namespace Jmoati\FFMpeg\Data;
 
 final class Timecode
 {
-    private int $hours;
-    private int $minutes;
-    private int $seconds;
-    private int $frames;
-
-    public function __construct(int $frames = 0, int $seconds = 0, int $minutes = 0, int $hours = 0)
-    {
-        $this->frames = $frames;
-        $this->seconds = $seconds;
-        $this->minutes = $minutes;
-        $this->hours = $hours;
+    public function __construct(
+        private int $frames = 0,
+        private int $seconds = 0,
+        private int $minutes = 0,
+        private int $hours = 0
+    ) {
     }
 
     public function __toString(): string

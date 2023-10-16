@@ -4,21 +4,16 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-use ArrayAccess;
-use ArrayIterator;
-use Countable;
-use IteratorAggregate;
 use Jmoati\FFMpeg\Filter\FilterInterface;
 
-class FilterCollection implements Countable, IteratorAggregate, ArrayAccess
+class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     /** @var FilterInterface[] */
     protected array $filters = [];
-    protected AbstractManipulable $parent;
 
-    public function __construct(AbstractManipulable $parent)
-    {
-        $this->parent = $parent;
+    public function __construct(
+        protected AbstractManipulable $parent
+    ) {
     }
 
     public function __toArray(): array
@@ -63,9 +58,9 @@ class FilterCollection implements Countable, IteratorAggregate, ArrayAccess
         return $this->filters;
     }
 
-    public function getIterator(): ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
-        return new ArrayIterator($this->filters);
+        return new \ArrayIterator($this->filters);
     }
 
     /**

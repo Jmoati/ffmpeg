@@ -10,15 +10,12 @@ final class RotationFilter extends FilterAbstract implements FormatFilterInterfa
     public const ROTATION_180 = 'transpose=1, transpose=1';
     public const ROTATION_270 = 'transpose=2';
 
-    private string $rotation;
-
-    public function __construct(string $rotation)
-    {
+    public function __construct(
+        private readonly string $rotation
+    ) {
         if (!in_array($rotation, [self::ROTATION_90, self::ROTATION_180, self::ROTATION_270], true)) {
             throw new \LogicException('$rotation must be an ROTATION_X constant');
         }
-
-        $this->rotation = $rotation;
     }
 
     public function __toArray(): array

@@ -17,7 +17,7 @@ abstract class SampleTestCase extends TestCase
     protected string $filenameHttps = 'https://symfony.com/images/logos/header-logo.svg';
     protected string $filenameBad;
 
-    public function __construct()
+    public function __construct(string $name)
     {
         $this->filenameVideo = realpath(__DIR__.'/../sample/ED.mov');
         $this->filenameAudio = realpath(__DIR__.'/../sample/Jens_East_-_Daybreak_feat_Henk_sample.mp3');
@@ -25,6 +25,6 @@ abstract class SampleTestCase extends TestCase
         $this->filenameImage = realpath(__DIR__.'/../sample/sea-2361247_640.jpg');
         $this->filenameBad = realpath(__DIR__.'/../sample/bad.mov');
 
-        parent::__construct();
+        parent::__construct($name);
     }
 }

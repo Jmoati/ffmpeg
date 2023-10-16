@@ -4,24 +4,21 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg;
 
-use Exception;
 use Jmoati\FFMpeg\Data\Media;
 use Symfony\Component\Process\Process;
 
 final class FFMpeg implements FFInterface
 {
-    private FFProbe $ffprobe;
     private string $bin;
 
-    public function __construct(FFProbe $ffprobe)
-    {
-        $this->ffprobe = $ffprobe;
-
+    public function __construct(
+        private readonly FFProbe $ffprobe
+    ) {
         $process = new Process(['which', 'ffmpeg']);
         $process->run();
 
         if ($process->getExitCode() > 0) {
-            throw new Exception('no ffmpeg binary found');
+            throw new \Exception('no ffmpeg binary found');
         }
 
         $this->bin = str_replace(\PHP_EOL, '', $process->getOutput());

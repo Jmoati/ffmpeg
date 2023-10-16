@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-use ArrayIterator;
-
 final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     private array $streams = [];
@@ -21,10 +19,7 @@ final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAc
         }
     }
 
-    /**
-     * @return Stream|false
-     */
-    public function first()
+    public function first(): false|Stream
     {
         return reset($this->streams);
     }
@@ -92,9 +87,9 @@ final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAc
         return $this->streams;
     }
 
-    public function getIterator(): ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
-        return new ArrayIterator($this->streams);
+        return new \ArrayIterator($this->streams);
     }
 
     /**
@@ -116,8 +111,6 @@ final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAc
     /**
      * @param string|int $offset
      * @param Stream     $value
-     *
-     * @return StreamCollection
      */
     public function offsetSet($offset, $value): self
     {
@@ -128,8 +121,6 @@ final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAc
 
     /**
      * @param string|int $offset
-     *
-     * @return StreamCollection
      */
     public function offsetUnset($offset): self
     {

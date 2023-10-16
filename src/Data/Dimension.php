@@ -6,13 +6,10 @@ namespace Jmoati\FFMpeg\Data;
 
 final class Dimension
 {
-    private int $width;
-    private int $height;
-
-    public function __construct(int $width, int $height)
-    {
-        $this->width = $width;
-        $this->height = $height;
+    public function __construct(
+        private int $width,
+        private int $height
+    ) {
     }
 
     public function __toString(): string
@@ -22,7 +19,7 @@ final class Dimension
 
     public static function create(int $width, int $height): self
     {
-        return new static($width, $height);
+        return new self($width, $height);
     }
 
     public static function createFromString(string $string): self

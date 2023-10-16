@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Jmoati\FFMpeg\Filter;
 
 use Jmoati\FFMpeg\Data\Dimension;
-use LogicException;
 
 final class ResizeFilter extends FilterAbstract implements FormatFilterInterface, FrameFilterInterface
 {
@@ -14,17 +13,13 @@ final class ResizeFilter extends FilterAbstract implements FormatFilterInterface
     public const MODE_MAX_WIDTH = 2;
     public const MODE_MAX_HEIGHT = 4;
 
-    private Dimension $dimension;
-    private int $mode;
-
-    public function __construct(Dimension $dimension, int $mode = self::MODE_INSET)
-    {
+    public function __construct(
+        private readonly Dimension $dimension,
+        private readonly int $mode = self::MODE_INSET
+    ) {
         if (!in_array($mode, [self::MODE_FORCE, self::MODE_INSET, self::MODE_MAX_HEIGHT, self::MODE_MAX_WIDTH], true)) {
-            throw new LogicException('$mode must be MODE_X constant');
+            throw new \LogicException('$mode must be MODE_X constant');
         }
-
-        $this->dimension = $dimension;
-        $this->mode = $mode;
     }
 
     public function __toArray(): array

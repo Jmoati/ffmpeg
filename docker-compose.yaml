@@ -4,4 +4,4 @@ services:
   php:
     build: ./dist/docker
     volumes:
-      - .:/app:cached
+      - .:/app
