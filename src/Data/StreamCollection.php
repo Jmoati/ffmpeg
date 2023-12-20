@@ -8,7 +8,7 @@ final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAc
 {
     private array $streams = [];
 
-    public function __construct(array $streams = [])
+    public function __construct(iterable $streams = [])
     {
         foreach ($streams as $stream) {
             if ($stream instanceof Stream) {
@@ -112,21 +112,17 @@ final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAc
      * @param string|int $offset
      * @param Stream     $value
      */
-    public function offsetSet($offset, $value): self
+    public function offsetSet($offset, $value): void
     {
         $this->streams[$offset] = $value;
-
-        return $this;
     }
 
     /**
      * @param string|int $offset
      */
-    public function offsetUnset($offset): self
+    public function offsetUnset($offset): void
     {
         unset($this->streams[$offset]);
-
-        return $this;
     }
 
     public function setMedia(Media $media): self

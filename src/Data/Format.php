@@ -8,11 +8,11 @@ class Format extends AbstractDataCollection
 {
     public function getFilename(): string
     {
-        return (string) $this->get('filename');
+        return $this->getString('filename');
     }
 
     public function getDuration(): float
     {
-        return (float) $this->get('duration');
+        return $this->getFloat('duration');
     }
 }

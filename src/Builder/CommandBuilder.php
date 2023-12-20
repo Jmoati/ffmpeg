@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Builder;
 
+use Jmoati\FFMpeg\Data\Format;
 use Jmoati\FFMpeg\Data\Media;
 use Jmoati\FFMpeg\Data\Output;
+use Jmoati\FFMpeg\Data\Stream;
 
 final readonly class CommandBuilder
 {
@@ -20,10 +22,15 @@ final readonly class CommandBuilder
     {
         $result = [];
 
+        /** @var Stream $stream */
         foreach ($this->media->streams() as $stream) {
             $result = array_merge($result, $stream->filters()->__toArray());
 
-            if ('image2' == $stream->media()->format()->get('format_name')) {
+            if (
+                $stream->media() instanceof Media
+                && $stream->media()->format() instanceof Format
+                && 'image2' == $stream->media()->format()->getString('format_name')
+            ) {
                 $result[] = '-loop';
                 $result[] = 1;
             }
@@ -34,6 +41,8 @@ final readonly class CommandBuilder
 
         if (!(null !== $this->output && isset($this->output->getParams()['maps']))) {
             foreach ($this->media->streams() as $index => $stream) {
+                assert($stream instanceof Stream);
+
                 $result[] = '-map';
                 $result[] = $index.':'.$stream->get('index');
             }
@@ -59,8 +68,8 @@ final readonly class CommandBuilder
         }
 
         if (false !== $this->media->streams()->videos()->first() && (null !== $this->output->getWidth() || null !== $this->output->getHeight())) {
-            $originalWidth = $this->media->streams()->videos()->first()->get('width');
-            $originalHeight = $this->media->streams()->videos()->first()->get('height');
+            $originalWidth = $this->media->streams()->videos()->first()->getInt('width');
+            $originalHeight = $this->media->streams()->videos()->first()->getInt('height');
             $originalRatio = $originalWidth / $originalHeight;
 
             if (null === $this->output->getWidth()) {
@@ -77,8 +86,8 @@ final readonly class CommandBuilder
                 }
             } else {
                 if (($this->output->getWidth() > $originalWidth) || ($this->output->getHeight() > $originalHeight)) {
-                    $this->output->setWidth((int) $originalWidth);
-                    $this->output->setHeight((int) $originalHeight);
+                    $this->output->setWidth($originalWidth);
+                    $this->output->setHeight($originalHeight);
                 }
             }
 

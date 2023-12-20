@@ -113,7 +113,7 @@ final class Media
             ),
             function ($type, $buffer) use (&$frames) {
                 if (preg_match('/frame=\s*([0-9]+)\s/', $buffer, $matches)) {
-                    $frames = $matches[1];
+                    $frames = (int) $matches[1];
                 }
             }
         );

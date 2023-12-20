@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
+use Jmoati\FFMpeg\Filter\FilterInterface;
+
 class Frame extends AbstractManipulable
 {
     public function __construct(
@@ -23,6 +25,7 @@ class Frame extends AbstractManipulable
 
         $filters = [];
 
+        /** @var FilterInterface $filter */
         foreach ($this->filters() as $filter) {
             $filters += $filter->__toArray();
         }

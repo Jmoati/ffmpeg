@@ -10,7 +10,7 @@ final class Stream extends AbstractDataCollection
     {
         $rotation = $this->getRotation($properties);
 
-        if ($rotation && in_array(abs($rotation), [90, 270])) {
+        if ($rotation && in_array(abs($rotation), [90, 270], true)) {
             $width = $properties['width'];
             $height = $properties['height'];
 
@@ -23,21 +23,19 @@ final class Stream extends AbstractDataCollection
         parent::__construct($properties);
     }
 
-    public function getRotation($properties): ?int
+    public function getRotation(array $properties): ?int
     {
-
         if (
             array_key_exists('tags', $properties)
-            && array_key_exists('rotate',$properties['tags'])
+            && array_key_exists('rotate', $properties['tags'])
         ) {
             return $properties['tags']['rotate'];
         }
 
         if (array_key_exists('side_data_list', $properties)) {
-            foreach ($properties['side_data_list'] as $sideData)
-            {
+            foreach ($properties['side_data_list'] as $sideData) {
                 if (array_key_exists('rotation', $sideData)) {
-                    return  $sideData['rotation'];
+                    return $sideData['rotation'];
                 }
             }
         }

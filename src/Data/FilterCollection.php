@@ -83,20 +83,16 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
      * @param int|string      $offset
      * @param FilterInterface $value
      */
-    public function offsetSet($offset, $value): self
+    public function offsetSet($offset, $value): void
     {
         $this->filters[$offset] = $value;
-
-        return $this;
     }
 
     /**
      * @param int|string $offset
      */
-    public function offsetUnset($offset): self
+    public function offsetUnset($offset): void
     {
         unset($this->filters[$offset]);
-
-        return $this;
     }
 }

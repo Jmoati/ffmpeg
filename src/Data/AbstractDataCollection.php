@@ -26,6 +26,33 @@ abstract class AbstractDataCollection extends AbstractManipulable implements \Co
         return $this->properties[$property];
     }
 
+    public function getInt(string $property): int
+    {
+        if (!array_key_exists($property, $this->properties)) {
+            throw new \Exception(sprintf('Property %s don\'t exists.', $property));
+        }
+
+        return (int) $this->properties[$property];
+    }
+
+    public function getString(string $property): string
+    {
+        if (!array_key_exists($property, $this->properties)) {
+            throw new \Exception(sprintf('Property %s don\'t exists.', $property));
+        }
+
+        return (string) $this->properties[$property];
+    }
+
+    public function getFloat(string $property): float
+    {
+        if (!array_key_exists($property, $this->properties)) {
+            throw new \Exception(sprintf('Property %s don\'t exists.', $property));
+        }
+
+        return (float) $this->properties[$property];
+    }
+
     public function keys(): array
     {
         return array_keys($this->properties);
