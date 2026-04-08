@@ -6,25 +6,30 @@ namespace Jmoati\FFMpeg\Data;
 
 use Jmoati\FFMpeg\Filter\FilterInterface;
 
+/**
+ * @implements \IteratorAggregate<int, FilterInterface>
+ * @implements \ArrayAccess<int, FilterInterface>
+ */
 class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 {
-    /** @var FilterInterface[] */
+    /** @var array<int, FilterInterface> */
     protected array $filters = [];
 
     public function __construct(
-        protected AbstractManipulable $parent
+        protected AbstractManipulable $parent,
     ) {
     }
 
+    /** @return list<string|int> */
     public function __toArray(): array
     {
-        $filters = [];
+        $result = [];
 
         foreach ($this->filters as $filter) {
-            $filters = array_merge($filters, $filter->__toArray());
+            array_push($result, ...$filter->__toArray());
         }
 
-        return $filters;
+        return $result;
     }
 
     public function parent(): AbstractManipulable
@@ -53,46 +58,39 @@ class FilterCollection implements \Countable, \IteratorAggregate, \ArrayAccess
         return count($this->filters);
     }
 
+    /** @return array<int, FilterInterface> */
     public function all(): array
     {
         return $this->filters;
     }
 
+    /** @return \ArrayIterator<int, FilterInterface> */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->filters);
     }
 
-    /**
-     * @param int|string $offset
-     */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
-        return isset($this->filters[$offset]);
+        return isset($this->filters[(int) $offset]);
     }
 
-    /**
-     * @param int|string $offset
-     */
-    public function offsetGet($offset): FilterInterface
+    public function offsetGet(mixed $offset): FilterInterface
     {
-        return $this->filters[$offset];
+        return $this->filters[(int) $offset];
     }
 
-    /**
-     * @param int|string      $offset
-     * @param FilterInterface $value
-     */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
-        $this->filters[$offset] = $value;
+        if (null === $offset) {
+            $this->filters[] = $value;
+        } else {
+            $this->filters[(int) $offset] = $value;
+        }
     }
 
-    /**
-     * @param int|string $offset
-     */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
-        unset($this->filters[$offset]);
+        unset($this->filters[(int) $offset]);
     }
 }

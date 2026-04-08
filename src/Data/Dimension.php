@@ -8,7 +8,7 @@ final class Dimension
 {
     public function __construct(
         private int $width,
-        private int $height
+        private int $height,
     ) {
     }
 
@@ -24,7 +24,9 @@ final class Dimension
 
     public static function createFromString(string $string): self
     {
-        preg_match('/([0-9]+)\s?[:xX,;]{1}\s?([0-9]+)/', $string, $matches);
+        if (!preg_match('/([0-9]+)\s?[:xX,;]{1}\s?([0-9]+)/', $string, $matches)) {
+            throw new \RuntimeException(sprintf('Cannot parse dimension from string "%s".', $string));
+        }
 
         return self::create((int) $matches[1], (int) $matches[2]);
     }

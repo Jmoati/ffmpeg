@@ -15,7 +15,7 @@ final class FFProbe implements FFInterface
     private const COMMAND_FORMAT = '-show_format';
     private const COMMAND_MEDIA = '-show_streams -show_format';
 
-    private string $bin;
+    private readonly string $bin;
 
     public function __construct()
     {
@@ -23,80 +23,92 @@ final class FFProbe implements FFInterface
         $process->run();
 
         if ($process->getExitCode() > 0) {
-            throw new \Exception('no ffprobe binary found');
+            throw new \RuntimeException('no ffprobe binary found');
         }
 
-        $this->bin = str_replace(\PHP_EOL, '', $process->getOutput());
+        $this->bin = mb_trim($process->getOutput());
     }
 
     public static function create(): self
     {
-        return new static();
+        return new self();
     }
 
     public function format(string $filename): Format
     {
-        $format = $this->probe($filename, self::COMMAND_FORMAT);
-        assert($format instanceof Format);
+        $result = $this->probe($filename, self::COMMAND_FORMAT);
 
-        return $format;
+        if (!$result instanceof Format) {
+            throw new \RuntimeException('Unexpected probe result type.');
+        }
+
+        return $result;
     }
 
     public function streams(string $filename): StreamCollection
     {
-        $streamCollection = $this->probe($filename, self::COMMAND_STREAMS);
-        assert($streamCollection instanceof StreamCollection);
+        $result = $this->probe($filename, self::COMMAND_STREAMS);
 
-        return $streamCollection;
+        if (!$result instanceof StreamCollection) {
+            throw new \RuntimeException('Unexpected probe result type.');
+        }
+
+        return $result;
     }
 
     public function media(string $filename): Media
     {
-        $media = $this->probe($filename, self::COMMAND_MEDIA);
-        assert($media instanceof Media);
+        $result = $this->probe($filename, self::COMMAND_MEDIA);
 
-        return $media;
+        if (!$result instanceof Media) {
+            throw new \RuntimeException('Unexpected probe result type.');
+        }
+
+        return $result;
     }
 
-    public function run(array $command, callable $callback = null): Process
+    /** @param list<string|int> $command */
+    public function run(array $command, ?callable $callback = null): Process
     {
-        $process = new Process(array_merge([$this->bin], $command), null, null, null, 0.0);
+        $process = new Process(array_merge([$this->bin], $command), timeout: 0.0);
         $process->run($callback);
 
         return $process;
     }
 
-    /**
-     * @throws \Exception
-     */
     private function probe(string $filename, string $command): Format|Media|StreamCollection
     {
-        $process = $this->run(array_merge(explode(' ', self::COMMAND_MEDIA), ['-print_format', 'json', $filename]));
+        $process = $this->run([...explode(' ', self::COMMAND_MEDIA), '-print_format', 'json', $filename]);
 
-        if ($process->run() > 1) {
-            throw new \Exception('File can\'t be probe.');
+        if ($process->getExitCode() > 0) {
+            throw new \RuntimeException("File can't be probe.");
         }
 
+        /** @var array<string, mixed>|null $output */
         $output = json_decode(mb_convert_encoding($process->getOutput(), 'UTF-8'), true);
 
-        assert(is_array($output));
-
-        if (empty($output)) {
-            throw new \Exception('File can\'t be probe.');
+        if (!is_array($output) || empty($output)) {
+            throw new \RuntimeException("File can't be probe.");
         }
 
-        assert(is_iterable($output['streams']));
+        /** @var array<string, mixed> $format */
+        $format = $output['format'] ?? [];
 
-        foreach ($output['streams'] as &$stream) {
-            $stream['media_filename'] = $output['format']['filename'];
+        /** @var list<array<string, mixed>> $streams */
+        $streams = $output['streams'] ?? [];
+
+        $mediaFilename = is_string($format['filename'] ?? null) ? $format['filename'] : '';
+
+        foreach ($streams as &$stream) {
+            $stream['media_filename'] = $mediaFilename;
         }
         unset($stream);
 
         return match ($command) {
-            self::COMMAND_STREAMS => new StreamCollection($output['streams']),
-            self::COMMAND_FORMAT => new Format($output['format']),
-            self::COMMAND_MEDIA => new Media(new FFMpeg($this), new StreamCollection($output['streams']), new Format($output['format'])),
-            default => throw new \Exception('Command not found'),
+            self::COMMAND_STREAMS => new StreamCollection($streams),
+            self::COMMAND_FORMAT => new Format($format),
+            self::COMMAND_MEDIA => new Media(new FFMpeg($this), new StreamCollection($streams), new Format($format)),
+            default => throw new \RuntimeException('Command not found'),
         };
     }
 }

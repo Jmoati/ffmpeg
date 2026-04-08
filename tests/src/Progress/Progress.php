@@ -8,29 +8,14 @@ use Jmoati\FFMpeg\Progress\ProgressInterface;
 
 class Progress implements ProgressInterface
 {
-    /** @var int */
-    public $totalPasses;
-
-    /** @var int */
-    public $currentPass;
-
-    /** @var int */
-    public $fps;
-
-    /** @var int */
-    public $currentFrame;
-
-    /** @var int */
-    public $totalFrames;
-
-    /** @var string */
-    public $buffer;
-
-    /** @var int */
-    public $remaining = -1;
-
-    /** @var int */
-    public $pourcent = 0;
+    public int $totalPasses = 0;
+    public int $currentPass = 0;
+    public int $fps = 0;
+    public int $currentFrame = 0;
+    public int $totalFrames = 0;
+    public string $buffer = '';
+    public int $remaining = -1;
+    public int $percent = 0;
 
     public function __invoke(string $type, string $data): void
     {
@@ -40,6 +25,26 @@ class Progress implements ProgressInterface
         }
 
         $this->buffer .= $data;
+    }
+
+    public function setTotalPasses(int $totalPasses): void
+    {
+        $this->totalPasses = $totalPasses;
+    }
+
+    public function setCurrentPass(int $currentPass): void
+    {
+        $this->currentPass = $currentPass;
+    }
+
+    public function setCurrentFrame(int $currentFrame): void
+    {
+        $this->currentFrame = $currentFrame;
+    }
+
+    public function setTotalFrames(int $totalFrames): void
+    {
+        $this->totalFrames = $totalFrames;
     }
 
     public function remaining(): int
@@ -52,15 +57,14 @@ class Progress implements ProgressInterface
         return $this->remaining;
     }
 
-    public function pourcent(): int
+    public function percent(): int
     {
         if ($this->totalFrames > 0 && $this->currentFrame > 0) {
             $totalFrames = $this->totalFrames * $this->totalPasses;
             $currentFrame = $this->totalFrames * ($this->currentPass - 1) + $this->currentFrame;
-
-            $this->pourcent = (int) round($currentFrame / $totalFrames * 100);
+            $this->percent = (int) round($currentFrame / $totalFrames * 100);
         }
 
-        return $this->pourcent;
+        return $this->percent;
     }
 }

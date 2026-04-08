@@ -10,7 +10,7 @@ final class Timecode
         private int $frames = 0,
         private int $seconds = 0,
         private int $minutes = 0,
-        private int $hours = 0
+        private int $hours = 0,
     ) {
     }
 
@@ -33,7 +33,7 @@ final class Timecode
     {
         $left = floor($seconds);
         $this->frames = (int) round(100 * ($seconds - $left));
-        $this->seconds = $left % 60;
+        $this->seconds = (int) ($left % 60);
 
         $left = (int) (($left - $this->seconds) / 60);
 
@@ -45,12 +45,12 @@ final class Timecode
 
     public static function create(): self
     {
-        return new static();
+        return new self();
     }
 
-    public static function createFromSeconds(float $secondes): self
+    public static function createFromSeconds(float $seconds): self
     {
-        return self::create()->fromSeconds($secondes);
+        return self::create()->fromSeconds($seconds);
     }
 
     public static function createFromString(string $string): self
@@ -60,7 +60,9 @@ final class Timecode
 
     public function fromString(string $string): self
     {
-        preg_match('/^([0-9]+):([0-9]+):([0-9]+)[:,\.]{1}([0-9]+)$/', $string, $matches);
+        if (!preg_match('/^([0-9]+):([0-9]+):([0-9]+)[:,\.]{1}([0-9]+)$/', $string, $matches)) {
+            throw new \RuntimeException(sprintf('Cannot parse timecode from string "%s".', $string));
+        }
 
         $this->hours = (int) $matches[1];
         $this->minutes = (int) $matches[2];
@@ -72,9 +74,7 @@ final class Timecode
 
     public function add(self $timecode): self
     {
-        $this->fromSeconds($this->getSeconds() + $timecode->getSeconds());
-
-        return $this;
+        return $this->fromSeconds($this->getSeconds() + $timecode->getSeconds());
     }
 
     public function getSeconds(): float
@@ -84,8 +84,6 @@ final class Timecode
 
     public function subtract(self $timecode): self
     {
-        $this->fromSeconds($this->getSeconds() - $timecode->getSeconds());
-
-        return $this;
+        return $this->fromSeconds($this->getSeconds() - $timecode->getSeconds());
     }
 }

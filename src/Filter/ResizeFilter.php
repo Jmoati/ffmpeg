@@ -15,16 +15,19 @@ final class ResizeFilter extends FilterAbstract implements FormatFilterInterface
 
     public function __construct(
         private readonly Dimension $dimension,
-        private readonly int $mode = self::MODE_INSET
+        private readonly int $mode = self::MODE_INSET,
     ) {
         if (!in_array($mode, [self::MODE_FORCE, self::MODE_INSET, self::MODE_MAX_HEIGHT, self::MODE_MAX_WIDTH], true)) {
             throw new \LogicException('$mode must be MODE_X constant');
         }
     }
 
+    /** @return list<string> */
     public function __toArray(): array
     {
-        return ['-s', (string) $this->compute()];
+        $computed = $this->compute();
+
+        return null !== $computed ? ['-s', (string) $computed] : [];
     }
 
     protected function compute(): ?Dimension
@@ -48,7 +51,7 @@ final class ResizeFilter extends FilterAbstract implements FormatFilterInterface
         }
 
         foreach ($this->parent() as $filter) {
-            if ($filter instanceof RotationFilter && RotationFilter::ROTATION_180 != $filter->getRotation()) {
+            if ($filter instanceof RotationFilter && RotationFilter::ROTATION_180 !== $filter->getRotation()) {
                 $width = $this->dimension->getWidth();
                 $this->dimension->setWidth($this->dimension->getHeight());
                 $this->dimension->setHeight($width);
