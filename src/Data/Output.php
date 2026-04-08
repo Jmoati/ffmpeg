@@ -14,15 +14,17 @@ final class Output
     private ?string $videoCodec = null;
     private ?string $format = null;
     private int $passes = 1;
+    /** @var array<string, string|int|null> */
     private array $extraParams = [];
     private ?int $width = null;
     private ?int $height = null;
+    /** @var list<string> */
     private array $maps = [];
     private bool $upscale = false;
 
     public static function create(): self
     {
-        return new static();
+        return new self();
     }
 
     public function getAudioCodec(): ?string
@@ -49,21 +51,20 @@ final class Output
         return $this;
     }
 
-    /**
-     * @param string|int|null $value
-     */
-    public function addExtraParam(string $param, $value = null): self
+    public function addExtraParam(string $param, string|int|null $value = null): self
     {
         $this->extraParams[$param] = $value;
 
         return $this;
     }
 
+    /** @return array<string, string|int|null> */
     public function getExtraParams(): array
     {
         return $this->extraParams;
     }
 
+    /** @param array<string, string|int|null> $extraParams */
     public function setExtraParams(array $extraParams): self
     {
         $this->extraParams = $extraParams;
@@ -121,14 +122,14 @@ final class Output
 
     public function setSize(string $size): self
     {
-        $size = explode('x', $size);
+        [$w, $h] = explode('x', $size);
 
-        if ($size[0] > 0) {
-            $this->width = (int) $size[0];
+        if ((int) $w > 0) {
+            $this->width = (int) $w;
         }
 
-        if ($size[1] > 0) {
-            $this->height = (int) $size[1];
+        if ((int) $h > 0) {
+            $this->height = (int) $h;
         }
 
         return $this;
@@ -208,38 +209,48 @@ final class Output
         return $this;
     }
 
+    /** @return list<string> */
     public function getMaps(): array
     {
         return $this->maps;
     }
 
+    /** @return array<string, string|int|list<string>> */
     public function getParams(): array
     {
-        $params = $this->extraParams;
+        /** @var array<string, string|int> $params */
+        $params = array_filter($this->extraParams, static fn (mixed $v): bool => null !== $v);
 
-        $this
-            ->setParam($params, 'acodec', 'getAudioCodec')
-            ->setParam($params, 'b:a', 'getAudioKiloBitrate', 'K')
-            ->setParam($params, 'f', 'getFormat')
-            ->setParam($params, 'vcodec', 'getVideoCodec')
-            ->setParam($params, 'b:v', 'getVideoKiloBitrate', 'K')
-            ->setParam($params, 'ar', 'getAudioRate')
-            ->setParam($params, 'r', 'getFrameRate')
-            ->setParam($params, 'maps', 'getMaps');
-
-        return $params;
-    }
-
-    private function setParam(array &$params, string $key, string $getter, string $suffix = ''): self
-    {
-        if (null !== $this->$getter()) {
-            if (is_array($this->$getter())) {
-                $params[$key] = $this->$getter();
-            } else {
-                $params[$key] = $this->$getter().$suffix;
-            }
+        if (null !== $this->audioCodec) {
+            $params['acodec'] = $this->audioCodec;
         }
 
-        return $this;
+        if (null !== $this->audioKiloBitrate) {
+            $params['b:a'] = $this->audioKiloBitrate.'K';
+        }
+
+        if (null !== $this->format) {
+            $params['f'] = $this->format;
+        }
+
+        if (null !== $this->videoCodec) {
+            $params['vcodec'] = $this->videoCodec;
+        }
+
+        if (null !== $this->videoKiloBitrate) {
+            $params['b:v'] = $this->videoKiloBitrate.'K';
+        }
+
+        if (null !== $this->audioRate) {
+            $params['ar'] = $this->audioRate;
+        }
+
+        if (null !== $this->frameRate) {
+            $params['r'] = $this->frameRate;
+        }
+
+        $params['maps'] = $this->maps;
+
+        return $params;
     }
 }

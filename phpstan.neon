@@ -1,4 +1,2 @@
 parameters:
-    ignoreErrors:
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
+    level: max

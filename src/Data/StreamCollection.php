@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
+/**
+ * @implements \IteratorAggregate<int, Stream>
+ * @implements \ArrayAccess<int, Stream>
+ */
 final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAccess
 {
+    /** @var array<int, Stream> */
     private array $streams = [];
 
+    /** @param iterable<array<string, mixed>|Stream> $streams */
     public function __construct(iterable $streams = [])
     {
         foreach ($streams as $stream) {
@@ -26,16 +32,15 @@ final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAc
 
     public function add(Stream $stream): self
     {
-        $newStream = clone $stream;
-        $this->streams[] = $newStream;
+        $this->streams[] = clone $stream;
 
         return $this;
     }
 
     public function remove(Stream $stream): self
     {
-        for ($i = 0, $l = count($this->streams); $i < $l; ++$i) {
-            if ($this->streams[$i] === $stream) {
+        foreach ($this->streams as $i => $s) {
+            if ($s === $stream) {
                 unset($this->streams[$i]);
                 break;
             }
@@ -46,32 +51,17 @@ final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAc
 
     public function videos(): self
     {
-        return new static(array_filter(
-            $this->streams,
-            function (Stream $stream) {
-                return $stream->isVideo();
-            }
-        ));
+        return new self(array_filter($this->streams, static fn (Stream $stream) => $stream->isVideo()));
     }
 
     public function audios(): self
     {
-        return new static(array_filter(
-            $this->streams,
-            function (Stream $stream) {
-                return $stream->isAudio();
-            }
-        ));
+        return new self(array_filter($this->streams, static fn (Stream $stream) => $stream->isAudio()));
     }
 
     public function data(): self
     {
-        return new static(array_filter(
-            $this->streams,
-            function (Stream $stream) {
-                return $stream->isData();
-            }
-        ));
+        return new self(array_filter($this->streams, static fn (Stream $stream) => $stream->isData()));
     }
 
     public function count(): int
@@ -79,50 +69,40 @@ final class StreamCollection implements \Countable, \IteratorAggregate, \ArrayAc
         return count($this->streams);
     }
 
-    /**
-     * @return Stream[]
-     */
+    /** @return array<int, Stream> */
     public function all(): array
     {
         return $this->streams;
     }
 
+    /** @return \ArrayIterator<int, Stream> */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->streams);
     }
 
-    /**
-     * @param string|int $offset
-     */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
-        return isset($this->streams[$offset]);
+        return isset($this->streams[(int) $offset]);
     }
 
-    /**
-     * @param string|int $offset
-     */
-    public function offsetGet($offset): Stream
+    public function offsetGet(mixed $offset): Stream
     {
-        return $this->streams[$offset];
+        return $this->streams[(int) $offset];
     }
 
-    /**
-     * @param string|int $offset
-     * @param Stream     $value
-     */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
-        $this->streams[$offset] = $value;
+        if (null === $offset) {
+            $this->streams[] = $value;
+        } else {
+            $this->streams[(int) $offset] = $value;
+        }
     }
 
-    /**
-     * @param string|int $offset
-     */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
-        unset($this->streams[$offset]);
+        unset($this->streams[(int) $offset]);
     }
 
     public function setMedia(Media $media): self

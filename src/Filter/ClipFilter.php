@@ -9,11 +9,12 @@ use Jmoati\FFMpeg\Data\Timecode;
 final class ClipFilter extends FilterAbstract implements FormatFilterInterface, StreamFilterInterface
 {
     public function __construct(
-        protected ?Timecode $duration = null,
-        protected ?Timecode $start = null
+        private readonly ?Timecode $duration = null,
+        private readonly ?Timecode $start = null,
     ) {
     }
 
+    /** @return list<string> */
     public function __toArray(): array
     {
         $result = [];

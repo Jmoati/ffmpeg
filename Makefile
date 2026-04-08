@@ -1,4 +1,4 @@
-RUN := docker-compose -f docker-compose.yaml run --rm php
+RUN := docker compose -f compose.yaml run --rm php
 
 default: help
 
@@ -16,6 +16,7 @@ help:
 	@echo "\033[32m   cs-fixer               \033[39m   fix files that need to be fixed"
 	@echo "\033[32m   help                   \033[39m   display this help"
 	@echo "\033[32m   install                \033[39m   install the project or when you switch to another git branch"
+	@echo "\033[32m   sh                     \033[39m   open a shell in the php container"
 
 check: cs-fixer phpunit phpstan
 
@@ -36,6 +37,9 @@ composer:
 
 cs-fixer: vendor
 	$(RUN) vendor/bin/php-cs-fixer fix --verbose
+
+sh:
+	docker compose -f compose.yaml run --rm php sh
 
 install: composer
 

@@ -6,11 +6,11 @@ namespace Jmoati\FFMpeg\Data;
 
 use Jmoati\FFMpeg\Filter\FilterInterface;
 
-class Frame extends AbstractManipulable
+final class Frame extends AbstractManipulable
 {
     public function __construct(
         Media $media,
-        protected Timecode $timecode
+        protected Timecode $timecode,
     ) {
         $this->media = $media;
 
@@ -27,12 +27,12 @@ class Frame extends AbstractManipulable
 
         /** @var FilterInterface $filter */
         foreach ($this->filters() as $filter) {
-            $filters += $filter->__toArray();
+            $filters = array_merge($filters, $filter->__toArray());
         }
 
         if (false === $accurate) {
             $command = array_merge(
-                ['-y', '-ss', $this->timecode,  '-i',  $this->media->format()->getFilename()],
+                ['-y', '-ss', (string) $this->timecode,  '-i',  $this->media->format()->getFilename()],
                 $filters,
                 ['-vframes',  1,  '-f',  'image2', $filename]
             );
@@ -40,7 +40,7 @@ class Frame extends AbstractManipulable
             $command = array_merge(
                 ['-y', '-i',  $this->media->format()->getFilename()],
                 $filters,
-                ['-vframes',  1,  '-ss', $this->timecode, '-f',  'image2', $filename]
+                ['-vframes',  1,  '-ss', (string) $this->timecode, '-f',  'image2', $filename]
             );
         }
 

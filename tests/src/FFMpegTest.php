@@ -22,6 +22,7 @@ class FFMpegTest extends SampleTestCase
 {
     protected function setUp(): void
     {
+        parent::setUp();
         $this->tearDown();
     }
 

@@ -6,6 +6,7 @@ namespace Jmoati\FFMpeg\Data;
 
 final class Stream extends AbstractDataCollection
 {
+    /** @param array<string, mixed> $properties */
     public function __construct(array $properties)
     {
         $rotation = $this->getRotation($properties);
@@ -21,26 +22,6 @@ final class Stream extends AbstractDataCollection
         }
 
         parent::__construct($properties);
-    }
-
-    public function getRotation(array $properties): ?int
-    {
-        if (
-            array_key_exists('tags', $properties)
-            && array_key_exists('rotate', $properties['tags'])
-        ) {
-            return $properties['tags']['rotate'];
-        }
-
-        if (array_key_exists('side_data_list', $properties)) {
-            foreach ($properties['side_data_list'] as $sideData) {
-                if (array_key_exists('rotation', $sideData)) {
-                    return $sideData['rotation'];
-                }
-            }
-        }
-
-        return null;
     }
 
     public function isAudio(): bool
@@ -64,6 +45,35 @@ final class Stream extends AbstractDataCollection
             return false;
         }
 
-        return 'image2' == $this->media()->format()->get('format_name');
+        $raw = $this->media()->format()->get('format_name');
+        $formatName = (is_scalar($raw) || null === $raw) ? (string) $raw : '';
+
+        return 'image2' === $formatName || str_ends_with($formatName, '_pipe');
+    }
+
+    /** @param array<string, mixed> $properties */
+    private function getRotation(array $properties): ?int
+    {
+        $tags = $properties['tags'] ?? null;
+
+        if (is_array($tags) && array_key_exists('rotate', $tags)) {
+            $r = $tags['rotate'];
+
+            return (is_scalar($r) || null === $r) ? (int) $r : null;
+        }
+
+        $sideDataList = $properties['side_data_list'] ?? null;
+
+        if (is_array($sideDataList)) {
+            foreach ($sideDataList as $sideData) {
+                if (is_array($sideData) && array_key_exists('rotation', $sideData)) {
+                    $r = $sideData['rotation'];
+
+                    return (is_scalar($r) || null === $r) ? (int) $r : null;
+                }
+            }
+        }
+
+        return null;
     }
 }

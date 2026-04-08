@@ -5,17 +5,34 @@ declare(strict_types=1);
 namespace Jmoati\FFMpeg\Filter;
 
 use Jmoati\FFMpeg\Data\FilterCollection;
+use Jmoati\FFMpeg\Data\Format;
+use Jmoati\FFMpeg\Data\Frame;
 use Jmoati\FFMpeg\Data\Media;
+use Jmoati\FFMpeg\Data\Stream;
 
-class FilterAbstract
+abstract class FilterAbstract implements FilterInterface
 {
     protected FilterCollection $parent;
 
-    public function setParent(FilterCollection $parent): self
+    /** @return list<string|int> */
+    abstract public function __toArray(): array;
+
+    public function setParent(FilterCollection $parent): static
     {
-        $this->checkFilterType($parent, 'Stream', 'StreamFilterInterface');
-        $this->checkFilterType($parent, 'Format', 'FormatFilterInterface');
-        $this->checkFilterType($parent, 'Frame', 'FrameFilterInterface');
+        $owner = $parent->parent();
+        $filterName = mb_substr(mb_strrchr(static::class, '\\') ?: static::class, 1);
+
+        if ($owner instanceof Stream && !($this instanceof StreamFilterInterface)) {
+            throw new \LogicException(sprintf("Filter %s can't be used with Stream.", $filterName));
+        }
+
+        if ($owner instanceof Format && !($this instanceof FormatFilterInterface)) {
+            throw new \LogicException(sprintf("Filter %s can't be used with Format.", $filterName));
+        }
+
+        if ($owner instanceof Frame && !($this instanceof FrameFilterInterface)) {
+            throw new \LogicException(sprintf("Filter %s can't be used with Frame.", $filterName));
+        }
 
         $this->parent = $parent;
 
@@ -30,20 +47,5 @@ class FilterAbstract
     public function media(): ?Media
     {
         return $this->parent()->parent()->media();
-    }
-
-    protected function checkFilterType(FilterCollection $parent, string $className, string $interface): bool
-    {
-        if (basename(str_replace('\\', '/', get_class($parent->parent()))) != $className) {
-            return true;
-        }
-
-        foreach (class_implements($this) as $implement) {
-            if ($interface == basename(str_replace('\\', '/', $implement))) {
-                return true;
-            }
-        }
-
-        throw new \LogicException(sprintf('Filter %s can\'t be use with %s', basename(str_replace('\\', '/', static::class)), $className));
     }
 }

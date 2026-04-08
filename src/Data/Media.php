@@ -11,14 +11,14 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class Media
 {
-    private StreamCollection $streams;
-    private Format $format;
-    private Filesystem $filesystem;
+    private readonly StreamCollection $streams;
+    private readonly Format $format;
+    private readonly Filesystem $filesystem;
 
     public function __construct(
-        private FFMpeg $ffmpeg,
-        StreamCollection $streams = null,
-        Format $format = null
+        private readonly FFMpeg $ffmpeg,
+        ?StreamCollection $streams = null,
+        ?Format $format = null,
     ) {
         $this->filesystem = new Filesystem();
 
@@ -49,7 +49,7 @@ final class Media
         return new Frame($this, $timecode);
     }
 
-    public function save(string $filename, Output $output, ProgressInterface $callback = null): bool
+    public function save(string $filename, Output $output, ?ProgressInterface $callback = null): bool
     {
         $commandBuilder = new CommandBuilder($this, $output);
         $tmpDir = sys_get_temp_dir().'/'.sha1(uniqid()).'/';
@@ -58,18 +58,15 @@ final class Media
 
         $passes = $output->getPasses();
 
-        if (null !== $callback) {
-            $this->setCallbackProperty($callback, 'totalPasses', $passes);
-        }
+        $callback?->setTotalPasses($passes);
 
         $process = null;
 
-        for ($i = 0, $l = $passes; $i < $l; ++$i) {
+        for ($i = 0; $i < $passes; ++$i) {
             if (null !== $callback) {
-                $this
-                    ->setCallbackProperty($callback, 'currentPass', $i + 1)
-                    ->setCallbackProperty($callback, 'currentFrame', 0)
-                    ->setCallbackProperty($callback, 'totalFrames', $this->getFrameCount($output));
+                $callback->setCurrentPass($i + 1);
+                $callback->setCurrentFrame(0);
+                $callback->setTotalFrames($this->getFrameCount($output));
             }
 
             $process = $this->ffmpeg->run(
@@ -92,7 +89,7 @@ final class Media
         $this->filesystem->remove($tmpDir);
 
         if (null === $process) {
-            throw new \LogicException();
+            throw new \LogicException('No encoding pass was executed.');
         }
 
         return 0 === $process->getExitCode();
@@ -111,22 +108,14 @@ final class Media
                 ['/dev/null'],
                 ['-y']
             ),
-            function ($type, $buffer) use (&$frames) {
+            static function (string $type, string $buffer) use (&$frames): void {
                 if (preg_match('/frame=\s*([0-9]+)\s/', $buffer, $matches)) {
                     $frames = (int) $matches[1];
                 }
             }
         );
 
+        // +1 because ffmpeg reports frames already processed; the last frame may not appear in output
         return $frames + 1;
-    }
-
-    private function setCallbackProperty(ProgressInterface $callback, string $property, int $value): self
-    {
-        if (property_exists($callback, $property)) {
-            $callback->$property = $value;
-        }
-
-        return $this;
     }
 }

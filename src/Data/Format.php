@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jmoati\FFMpeg\Data;
 
-class Format extends AbstractDataCollection
+final class Format extends AbstractDataCollection
 {
     public function getFilename(): string
     {
