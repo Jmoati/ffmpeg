@@ -11,7 +11,7 @@ use Jmoati\FFMpeg\Test\SampleTestCase;
 
 class FilterCollectionTest extends SampleTestCase
 {
-    public function test()
+    public function test(): void
     {
         $media = FFMpeg::openFile($this->filenameVideo);
 

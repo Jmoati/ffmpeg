@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class OutputTest extends TestCase
 {
-    public function test()
+    public function test(): void
     {
         $output = Output::create()
             ->setAudioCodec('aac')

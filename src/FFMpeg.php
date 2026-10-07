@@ -42,7 +42,7 @@ final class FFMpeg implements FFInterface
     /** @param list<string|int> $command */
     public function run(array $command, ?callable $callback = null): Process
     {
-        $process = new Process(array_merge([$this->bin], $command), timeout: 0.0);
+        $process = new Process(array_merge([$this->bin], array_map(strval(...), $command)), timeout: 0.0);
         $process->run($callback);
 
         return $process;

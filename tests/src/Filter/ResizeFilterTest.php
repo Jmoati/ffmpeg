@@ -11,7 +11,7 @@ use Jmoati\FFMpeg\Test\SampleTestCase;
 
 class ResizeFilterTest extends SampleTestCase
 {
-    public function test()
+    public function test(): void
     {
         $dimension = Dimension::create(640, 480);
 

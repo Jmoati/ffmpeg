@@ -9,7 +9,7 @@ use Jmoati\FFMpeg\Test\SampleTestCase;
 
 class FormatTest extends SampleTestCase
 {
-    public function test()
+    public function test(): void
     {
         $media = FFMpeg::openFile($this->filenameImage);
         $format = $media->format();

@@ -12,7 +12,7 @@ use Jmoati\FFMpeg\FFProbe;
 
 class FFProbeTest extends SampleTestCase
 {
-    public function testFormat()
+    public function testFormat(): void
     {
         $format = FFProbe::create()->format($this->filenameVideo);
 
@@ -22,7 +22,7 @@ class FFProbeTest extends SampleTestCase
         $this->assertTrue(is_numeric($format->getDuration()));
     }
 
-    public function testStreams()
+    public function testStreams(): void
     {
         $streams = FFProbe::create()->streams($this->filenameVideo);
 
@@ -58,7 +58,7 @@ class FFProbeTest extends SampleTestCase
         $this->assertEquals(1, $streams->count());
     }
 
-    public function testMedia()
+    public function testMedia(): void
     {
         $media = FFProbe::create()->media($this->filenameVideo);
 
@@ -67,7 +67,7 @@ class FFProbeTest extends SampleTestCase
         $this->assertTrue($media->format() instanceof Format);
     }
 
-    public function testBadFile()
+    public function testBadFile(): void
     {
         $this->expectExceptionMessage('File can\'t be probe.');
         FFProbe::create()->format($this->filenameBad);

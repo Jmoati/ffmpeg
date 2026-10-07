@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class DimensionTest extends TestCase
 {
-    public function test()
+    public function test(): void
     {
         $dimension = Dimension::createFromString('640x480');
 

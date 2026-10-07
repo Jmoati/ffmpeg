@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class TimecodeTest extends TestCase
 {
-    public function test()
+    public function test(): void
     {
         $timecode = Timecode::createFromFrame(48, 24);
         $this->assertEquals(2, $timecode->getSeconds());

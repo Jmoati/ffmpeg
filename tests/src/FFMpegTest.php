@@ -32,7 +32,7 @@ class FFMpegTest extends SampleTestCase
         (new Filesystem())->remove($this->filenameFrameDestination);
     }
 
-    public function testOpenFile()
+    public function testOpenFile(): void
     {
         $media = FFMpeg::openFile($this->filenameVideo);
 
@@ -61,13 +61,13 @@ class FFMpegTest extends SampleTestCase
         $this->assertFalse($audio->isImage());
     }
 
-    public function testOpenHttpsFile()
+    public function testOpenHttpsFile(): void
     {
         $media = FFMpeg::openFile($this->filenameHttps);
         $this->assertTrue($media->streams()->first()->isImage());
     }
 
-    public function testCreateFile()
+    public function testCreateFile(): void
     {
         $media = FFMpeg::createFile();
         $streams = $media->streams();
@@ -82,7 +82,7 @@ class FFMpegTest extends SampleTestCase
         $this->assertFalse($streams->videos()->first());
     }
 
-    public function testEncodage()
+    public function testEncodage(): void
     {
         $video = FFMpeg::openFile($this->filenameVideoRotate);
         $audio = FFMpeg::openFile($this->filenameAudio);
@@ -135,7 +135,7 @@ class FFMpegTest extends SampleTestCase
         $this->assertTrue($check->format()->get('duration') > 0);
     }
 
-    public function testFilter()
+    public function testFilter(): void
     {
         $video = FFMpeg::openFile($this->filenameVideo);
 
@@ -190,7 +190,7 @@ class FFMpegTest extends SampleTestCase
         $this->assertEquals(0, $video->format()->filters()->count());
     }
 
-    public function testFrame()
+    public function testFrame(): void
     {
         $timecode = Timecode::createFromFrame(2, 24);
 
@@ -208,7 +208,7 @@ class FFMpegTest extends SampleTestCase
         $this->assertTrue(file_exists($this->filenameFrameDestination));
     }
 
-    public function testProgress()
+    public function testProgress(): void
     {
         $progress = new Progress();
         $video = FFMpeg::openFile($this->filenameVideo);
@@ -223,7 +223,7 @@ class FFMpegTest extends SampleTestCase
         $this->assertTrue($result);
     }
 
-    public function testMustFail()
+    public function testMustFail(): void
     {
         $media = FFMpeg::openFile($this->filenameImage);
         $output = Output::create()
