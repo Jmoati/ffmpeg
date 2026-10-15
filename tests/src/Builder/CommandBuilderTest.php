@@ -35,4 +35,32 @@ class CommandBuilderTest extends SampleTestCase
 
         $this->assertTrue(false !== mb_strstr(implode(' ', $builder->computeParams()), sprintf('%sx%s', $stream->get('width'), $stream->get('height'))));
     }
+
+    public function testTheStreamsOfAFileShareOneInput(): void
+    {
+        $media = FFMpeg::openFile($this->filenameVideo);
+
+        $this->assertSame(
+            ['-i', $this->filenameVideo, '-map', '0:0', '-map', '0:1'],
+            (new CommandBuilder($media))->computeInputs(),
+        );
+    }
+
+    public function testTheStreamsOfTwoFilesGetAnInputEach(): void
+    {
+        $video = FFMpeg::openFile($this->filenameVideo)->streams()->videos()->first();
+        $audio = FFMpeg::openFile($this->filenameAudio)->streams()->audios()->first();
+
+        if (false === $video || false === $audio) {
+            throw new \LogicException();
+        }
+
+        $media = FFMpeg::createFile();
+        $media->streams()->add($video)->add($audio);
+
+        $this->assertSame(
+            ['-i', $this->filenameVideo, '-i', $this->filenameAudio, '-map', '0:'.$video->get('index'), '-map', '1:'.$audio->get('index')],
+            (new CommandBuilder($media))->computeInputs(),
+        );
+    }
 }
