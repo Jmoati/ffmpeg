@@ -20,25 +20,35 @@ final readonly class CommandBuilder
     /** @return list<string|int> */
     public function computeInputs(): array
     {
+        /** @var array<string, int> $inputs index of each input, by its options */
+        $inputs = [];
         $result = [];
         $maps = [];
         $addDefaultMaps = null === $this->output || empty($this->output->getParams()['maps']);
 
         /** @var Stream $stream */
-        foreach ($this->media->streams() as $index => $stream) {
-            array_push($result, ...$stream->filters()->__toArray());
+        foreach ($this->media->streams() as $stream) {
+            $options = $stream->filters()->__toArray();
 
             if ($stream->isImage()) {
-                $result[] = '-loop';
-                $result[] = 1;
+                $options[] = '-loop';
+                $options[] = 1;
             }
 
-            $result[] = '-i';
-            $result[] = $stream->getString('media_filename');
+            $options[] = '-i';
+            $options[] = $stream->getString('media_filename');
+
+            // The streams of a file share one input: ffmpeg then reads the file once, not once per stream.
+            $key = implode("\0", $options);
+
+            if (!isset($inputs[$key])) {
+                $inputs[$key] = count($inputs);
+                array_push($result, ...$options);
+            }
 
             if ($addDefaultMaps) {
                 $maps[] = '-map';
-                $maps[] = $index.':'.$stream->getString('index');
+                $maps[] = $inputs[$key].':'.$stream->getString('index');
             }
         }
 
